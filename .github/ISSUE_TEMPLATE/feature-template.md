@@ -1,9 +1,9 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
+name: Feature Template
+about: 기능 요청 이슈 템플릿
 title: ''
 labels: ''
-assignees: ''
+assignees: kwj0605
 
 ---
 
