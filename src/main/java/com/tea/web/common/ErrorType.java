@@ -19,6 +19,7 @@ public enum ErrorType {
 //  TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "Refresh Token이 존재하지 않습니다. 다시 로그인 해주세요."),
 //  NOT_ACCESS_TOKEN(HttpStatus.NOT_FOUND, "Access Token이 존재하지 않습니다."),
 //  UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "본인 정보만 접근할 수 있습니다.")
+  INVALID_ADMIN_CODE(HttpStatus.BAD_REQUEST, "어드민 코드가 틀렸습니다."),
   ;
 
 
