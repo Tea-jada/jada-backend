@@ -4,12 +4,15 @@ import com.tea.web.common.CustomException;
 import com.tea.web.common.ErrorType;
 import com.tea.web.users.application.dto.request.AdminSignupRequestDto;
 import com.tea.web.users.application.dto.request.SignupRequestDto;
+import com.tea.web.users.application.dto.response.UserInfoResponseDto;
 import com.tea.web.users.domain.model.Role;
 import com.tea.web.users.domain.model.User;
 import com.tea.web.users.domain.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,5 +60,10 @@ public class UserService {
         );
 
         userRepository.save(admin);
+    }
+
+    public Page<UserInfoResponseDto> getUserInfos(Pageable pageable) {
+        Page<User> usersPage = userRepository.findAllByIsDeletedFalse(pageable);
+        return usersPage.map(UserInfoResponseDto::new);
     }
 }

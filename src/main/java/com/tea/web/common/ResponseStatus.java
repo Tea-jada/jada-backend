@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ResponseStatus {
 
-  SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입에 성공했습니다.")
+  SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입에 성공했습니다."),
+  GET_USER_SUCCESS(HttpStatus.OK, "유저 조회에 성공했습니다.")
   ;
 
   private final HttpStatus httpStatus;
