@@ -43,6 +43,7 @@ public class User extends BaseEntity {
                 .email(email)
                 .username(username)
                 .password(password)
+                .isActive("Y")  // 처음 회원가입 시 "Y"
                 .role(role)
                 .build();
         user.createdBy(email);
