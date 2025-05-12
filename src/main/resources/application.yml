@@ -2,17 +2,27 @@ spring:
   application:
     name: culture-tea
 
-  # DB ??
+  # DB
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
+  # JPA 설정
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  # Redis 설정
+  data:
+    redis:
+      host: localhost
+      port: 6379 # redis 데이터베이스는 기본적으로 6379 포트 사용
+      username: ${REDIS_USER}
+      password: ${REDIS_PASSWORD}
 
 # server port
 server:
