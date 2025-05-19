@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,29 +21,33 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("1234")
     private String adminCode;
 
     /**
      * 일반 회원가입
+     * 
      * @param signupRequestDto
      */
     @Transactional
     public void signup(SignupRequestDto signupRequestDto) {
-        Role role = Role.USER;
+
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
 
         User user = User.from(signupRequestDto.getEmail(),
                 signupRequestDto.getUsername(),
-                signupRequestDto.getPassword(),
-                role
-        );
+                encodedPassword,
+                Role.USER);
 
         userRepository.save(user);
     }
 
     /**
      * 어드민 회원가입
+     * 
      * @param requestDto
      */
     @Transactional
@@ -56,8 +61,7 @@ public class UserService {
         User admin = User.from(requestDto.getEmail(),
                 requestDto.getUsername(),
                 requestDto.getPassword(),
-                role
-        );
+                role);
 
         userRepository.save(admin);
     }
