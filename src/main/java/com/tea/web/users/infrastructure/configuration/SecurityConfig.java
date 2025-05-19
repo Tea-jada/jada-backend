@@ -1,9 +1,10 @@
 package com.tea.web.users.infrastructure.configuration;
 
-import com.tea.web.users.application.security.UserDetails.UserDetailsServiceImpl;
 import com.tea.web.users.application.security.jwt.JwtAuthenticationFilter;
 import com.tea.web.users.application.security.jwt.JwtAuthorizationFilter;
 import com.tea.web.users.application.security.jwt.JwtUtil;
+import com.tea.web.users.application.security.userdetails.UserDetailsServiceImpl;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration  //수동Bean 등록시 필요
+@Configuration // 수동Bean 등록시 필요
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Slf4j
@@ -30,7 +31,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final String[] permitRequests = {"/api/v1/users/signup", "/api/v1/users/login"};
+    private final String[] permitRequests = { "/api/v1/users/signup", "/api/v1/users/login" };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -51,7 +52,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter() {    // API에 전달되는 JWT 유효성 검증 및 인가 처리
+    public JwtAuthorizationFilter jwtAuthorizationFilter() { // API에 전달되는 JWT 유효성 검증 및 인가 처리
         return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
     }
 
@@ -60,11 +61,9 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers(permitRequests).permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

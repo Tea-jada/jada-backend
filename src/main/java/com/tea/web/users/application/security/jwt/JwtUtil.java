@@ -33,8 +33,7 @@ public class JwtUtil {
     public JwtUtil(
             @Value("${service.jwt.secret-key}") String secretKeyValue,
             @Value("${spring.application.name}") String issuer,
-            RedisDao redisDao
-    ) {
+            RedisDao redisDao) {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKeyValue));
         this.issuer = issuer;
         this.redisDao = redisDao;
@@ -104,7 +103,8 @@ public class JwtUtil {
     // RefreshToken 검증
     public boolean validateRefreshToken(String token) {
         // 기본적인 JWT 검증
-        if (!validateToken(token)) return false;
+        if (!validateToken(token))
+            return false;
 
         try {
             // token에서 username 추출하기
