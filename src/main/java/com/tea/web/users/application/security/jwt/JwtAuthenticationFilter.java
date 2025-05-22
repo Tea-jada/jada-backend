@@ -3,7 +3,7 @@ package com.tea.web.users.application.security.jwt;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tea.web.users.application.dto.request.LoginRequestDto;
-import com.tea.web.users.application.security.UserDetails.UserDetailsImpl;
+import com.tea.web.users.application.security.userdetails.UserDetailsImpl;
 import com.tea.web.users.domain.model.Role;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,9 +31,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         try {
-            LoginRequestDto loginRequestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
+            LoginRequestDto loginRequestDto = new ObjectMapper().readValue(request.getInputStream(),
+                    LoginRequestDto.class);
 
-            return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword(), null));
+            return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
+                    loginRequestDto.getUsername(), loginRequestDto.getPassword(), null));
 
         } catch (StreamReadException e) {
             log.error(e.getMessage());
@@ -45,7 +47,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+            Authentication authResult) {
         Long userId = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getId();
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getEmail(); // 로그인 시 ID = 유저의 이메일
         String nickname = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUsername(); // 유저의 이름
@@ -58,7 +61,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException {
         log.error("로그인 실패: " + failed.getMessage());
         response.setStatus(401);
         response.setContentType("application/json");

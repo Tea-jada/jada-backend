@@ -1,6 +1,5 @@
 package com.tea.web.users.application.security.jwt;
 
-import com.tea.web.users.application.security.UserDetails.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.tea.web.users.application.security.userdetails.UserDetailsServiceImpl;
 
 import java.io.IOException;
 
@@ -30,7 +31,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
 
         String accessValue = jwtUtil.getJwtFromHeader(req, JwtUtil.AUTHORIZATION_HEADER);
         String refreshValue = jwtUtil.getJwtFromHeader(req, JwtUtil.REFRESH_TOKEN_HEADER);
@@ -40,8 +41,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 log.error("RefreshToken Error");
                 return;
             }
-        }
-        else if (StringUtils.hasText(accessValue)) {
+        } else if (StringUtils.hasText(accessValue)) {
             if (!jwtUtil.validateToken(accessValue)) {
                 log.error("AccessToken Error");
                 return;
