@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -66,8 +67,35 @@ public class UserService {
         userRepository.save(admin);
     }
 
+    /**
+     * 유저 목록 조회 (어드민 전용)
+     * 
+     * @param pageable
+     * @return 유저 목록
+     */
     public Page<UserInfoResponseDto> getUserInfos(Pageable pageable) {
         Page<User> usersPage = userRepository.findAllByIsDeletedFalse(pageable);
         return usersPage.map(UserInfoResponseDto::new);
+    }
+
+    /**
+     * 사용자 정보 조회
+     * 
+     * @param userDetails
+     * @return 로그인한 사용자 정보
+     */
+    public UserInfoResponseDto getMyInfo(Long userId, UserDetails userDetails) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+
+        String email = user.getEmail();
+
+        // 어드민이 아닌 경우 본인 정보만 조회 가능
+        if (userDetails.getAuthorities().equals(Role.USER)) {
+            if (!email.equals(userDetails.getUsername())) {
+                throw new CustomException(ErrorType.UNAUTHORIZED_USER);
+            }
+        }
+
+        return new UserInfoResponseDto(user);
     }
 }
