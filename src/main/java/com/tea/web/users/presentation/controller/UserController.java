@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +26,7 @@ public class UserController {
 
     /**
      * 일반 회원가입
+     * 
      * @param signupRequestDto
      * @return "회원가입에 성공했습니다."
      */
@@ -35,6 +38,7 @@ public class UserController {
 
     /**
      * 어드민 회원가입
+     * 
      * @param requestDto
      * @return "회원가입에 성공했습니다."
      */
@@ -46,6 +50,7 @@ public class UserController {
 
     /**
      * 사용자 목록 조회 (어드민 전용)
+     * 
      * @param pageable
      * @return 유저 정보 페이징(id, email, username, isActive, role)
      */
@@ -55,5 +60,19 @@ public class UserController {
             @PageableDefault Pageable pageable) {
         Page<UserInfoResponseDto> userInfos = userService.getUserInfos(pageable);
         return new ResponseDataDto<>(ResponseStatus.GET_USER_SUCCESS, userInfos);
+    }
+
+    /**
+     * 사용자 정보 조회
+     * 
+     * @param userDetails
+     * @return 사용자 정보 조회
+     */
+    @GetMapping("/info/{userId}")
+    public ResponseDataDto<UserInfoResponseDto> getMyInfo(
+            @PathVariable Long userId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        UserInfoResponseDto userInfo = userService.getMyInfo(userId, userDetails);
+        return new ResponseDataDto<>(ResponseStatus.GET_USER_SUCCESS, userInfo);
     }
 }

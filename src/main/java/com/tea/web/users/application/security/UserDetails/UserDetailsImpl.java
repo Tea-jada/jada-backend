@@ -1,4 +1,4 @@
-package com.tea.web.users.application.security.UserDetails;
+package com.tea.web.users.application.security.userdetails;
 
 import com.tea.web.users.domain.model.User;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public String getUsername() {
-    return user.getUsername();
+    return user.getEmail();
   }
 
 }
