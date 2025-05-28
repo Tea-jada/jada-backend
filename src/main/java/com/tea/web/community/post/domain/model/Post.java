@@ -1,7 +1,9 @@
 package com.tea.web.community.post.domain.model;
 
+import com.tea.web.common.BaseEntity;
 import com.tea.web.users.domain.model.User;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "c_post")
 @Getter
 @NoArgsConstructor
-public class Post {
+public class Post extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +45,23 @@ public class Post {
 
     @Column(name = "img3l", length = 600)
     private String img3l;
+
+    @Builder
+    public Post(User user, String type, String title, String content, Category category,
+            String thumbnailUrl, String img1l, String img2l, String img3l) {
+        this.user = user;
+        this.type = type;
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.thumbnailUrl = thumbnailUrl;
+        this.img1l = img1l;
+        this.img2l = img2l;
+        this.img3l = img3l;
+    }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
