@@ -2,6 +2,7 @@ package com.tea.web.community.post.presentation.controller;
 
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
+import com.tea.web.community.post.application.dto.response.PostListResponseDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
 import com.tea.web.community.post.application.service.PostService;
 
@@ -48,11 +49,11 @@ public class PostController {
      * 게시글 목록 조회 (페이징)
      * 
      * @param pageable 페이징 정보 (page: 페이지 번호(0부터 시작), size: 페이지 크기)
-     * @return 페이징된 게시글 목록
+     * @return 페이징된 게시글 목록 (id, title, content, thumbnailUrl, updatedAt)
      * @example /api/v1/posts?page=0&size=10
      */
     @GetMapping
-    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+    public ResponseEntity<Page<PostListResponseDto>> getAllPosts(Pageable pageable) {
         return ResponseEntity.ok(postService.getAllPosts(pageable));
     }
 
@@ -87,11 +88,11 @@ public class PostController {
      * 
      * @param keyword  검색어 (게시글 제목 또는 작성자 이름)
      * @param pageable 페이징 정보 (page: 페이지 번호(0부터 시작), size: 페이지 크기)
-     * @return 검색된 게시글 목록
+     * @return 검색된 게시글 목록 (id, title, content, thumbnailUrl, updatedAt)
      * @example /api/v1/posts/search?keyword=검색어&page=0&size=10
      */
     @GetMapping("/search")
-    public ResponseEntity<Page<PostResponseDto>> searchPosts(
+    public ResponseEntity<Page<PostListResponseDto>> searchPosts(
             @RequestParam String keyword,
             Pageable pageable) {
         return ResponseEntity.ok(postService.searchPosts(keyword, pageable));

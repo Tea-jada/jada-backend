@@ -5,6 +5,7 @@ import com.tea.web.common.ErrorType;
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
+import com.tea.web.community.post.application.dto.response.PostListResponseDto;
 import com.tea.web.community.post.domain.model.Post;
 import com.tea.web.community.post.domain.repository.PostRepository;
 import com.tea.web.users.domain.model.User;
@@ -65,9 +66,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostResponseDto> getAllPosts(Pageable pageable) {
+    public Page<PostListResponseDto> getAllPosts(Pageable pageable) {
         return postRepository.findAll(pageable)
-                .map(this::convertToResponseDto);
+                .map(this::convertToListResponseDto);
     }
 
     @Override
@@ -90,9 +91,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostResponseDto> searchPosts(String keyword, Pageable pageable) {
+    public Page<PostListResponseDto> searchPosts(String keyword, Pageable pageable) {
         return postRepository.searchByTitleOrUsername(keyword, pageable)
-                .map(this::convertToResponseDto);
+                .map(this::convertToListResponseDto);
     }
 
     private PostResponseDto convertToResponseDto(Post post) {
@@ -107,6 +108,16 @@ public class PostServiceImpl implements PostService {
                 .img2l(post.getImg2l())
                 .img3l(post.getImg3l())
                 .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .build();
+    }
+
+    private PostListResponseDto convertToListResponseDto(Post post) {
+        return PostListResponseDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .thumbnailUrl(post.getThumbnailUrl())
                 .updatedAt(post.getUpdatedAt())
                 .build();
     }
