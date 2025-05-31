@@ -81,4 +81,19 @@ public class PostController {
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * 게시글 검색 (제목 또는 작성자 이름으로 검색)
+     * 
+     * @param keyword  검색어 (게시글 제목 또는 작성자 이름)
+     * @param pageable 페이징 정보 (page: 페이지 번호(0부터 시작), size: 페이지 크기)
+     * @return 검색된 게시글 목록
+     * @example /api/v1/posts/search?keyword=검색어&page=0&size=10
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Page<PostResponseDto>> searchPosts(
+            @RequestParam String keyword,
+            Pageable pageable) {
+        return ResponseEntity.ok(postService.searchPosts(keyword, pageable));
+    }
 }

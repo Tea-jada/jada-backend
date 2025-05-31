@@ -89,6 +89,12 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(postId);
     }
 
+    @Override
+    public Page<PostResponseDto> searchPosts(String keyword, Pageable pageable) {
+        return postRepository.searchByTitleOrUsername(keyword, pageable)
+                .map(this::convertToResponseDto);
+    }
+
     private PostResponseDto convertToResponseDto(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())
