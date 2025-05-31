@@ -23,6 +23,9 @@ public enum ErrorType {
   INVALID_ADMIN_CODE(HttpStatus.BAD_REQUEST, "어드민 코드가 틀렸습니다."),
   UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "본인 정보만 접근할 수 있습니다."),
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),
+
+  POST_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
+  FORBIDDEN(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
   ;
 
   private final HttpStatus httpStatus;

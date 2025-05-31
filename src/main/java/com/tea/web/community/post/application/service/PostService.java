@@ -17,7 +17,7 @@ public interface PostService {
 
     Page<PostListResponseDto> searchPosts(String keyword, Pageable pageable);
 
-    PostResponseDto updatePost(Long postId, PostUpdateRequestDto request);
+    PostResponseDto updatePost(Long postId, PostUpdateRequestDto request, UserDetails userDetails);
 
-    void deletePost(Long postId);
+    void deletePost(Long postId, UserDetails userDetails);
 }

@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto getPost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found with id: " + postId));
+                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
         return convertToResponseDto(post);
     }
 
@@ -73,9 +73,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public PostResponseDto updatePost(Long postId, PostUpdateRequestDto request) {
+    public PostResponseDto updatePost(Long postId, PostUpdateRequestDto request, UserDetails userDetails) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found with id: " + postId));
+                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
+
+        // 게시글 작성자 확인
+        if (!post.getUser().getEmail().equals(userDetails.getUsername())) {
+            throw new CustomException(ErrorType.FORBIDDEN);
+        }
 
         post.update(request.getTitle(), request.getContent());
         return convertToResponseDto(post);
@@ -83,10 +88,15 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void deletePost(Long postId) {
-        if (!postRepository.existsById(postId)) {
-            throw new IllegalArgumentException("Post not found with id: " + postId);
+    public void deletePost(Long postId, UserDetails userDetails) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
+
+        // 게시글 작성자 확인
+        if (!post.getUser().getEmail().equals(userDetails.getUsername())) {
+            throw new CustomException(ErrorType.FORBIDDEN);
         }
+
         postRepository.deleteById(postId);
     }
 

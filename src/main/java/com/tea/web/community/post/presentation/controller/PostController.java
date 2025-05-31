@@ -60,26 +60,31 @@ public class PostController {
     /**
      * 게시글 수정
      * 
-     * @param postId  수정할 게시글 ID
-     * @param request 게시글 수정 요청 데이터
+     * @param postId      수정할 게시글 ID
+     * @param request     게시글 수정 요청 데이터
+     * @param userDetails 현재 인증된 사용자 정보
      * @return 수정된 게시글 정보
      */
     @PutMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostUpdateRequestDto request) {
-        return ResponseEntity.ok(postService.updatePost(postId, request));
+            @RequestBody PostUpdateRequestDto request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(postService.updatePost(postId, request, userDetails));
     }
 
     /**
      * 게시글 삭제
      * 
-     * @param postId 삭제할 게시글 ID
+     * @param postId      삭제할 게시글 ID
+     * @param userDetails 현재 인증된 사용자 정보
      * @return 204 No Content
      */
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        postService.deletePost(postId, userDetails);
         return ResponseEntity.noContent().build();
     }
 
