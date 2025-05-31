@@ -6,12 +6,12 @@ import com.tea.web.community.post.application.dto.response.PostResponseDto;
 import com.tea.web.community.post.application.service.PostService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -23,27 +23,46 @@ public class PostController {
     /**
      * 게시글 생성
      * 
-     * @param request
-     * @param userDetails
-     * @return
+     * @param request     게시글 생성 요청 데이터
+     * @param userDetails 현재 인증된 사용자 정보
+     * @return 생성된 게시글 정보
      */
-    // TODO: 게시글 생성 시 썸네일, 이미지 업로드 기능 추가
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(@RequestBody PostCreateRequestDto request,
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(postService.createPost(request, userDetails));
     }
 
+    /**
+     * 게시글 상세 조회
+     * 
+     * @param postId 조회할 게시글 ID
+     * @return 게시글 상세 정보
+     */
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
         return ResponseEntity.ok(postService.getPost(postId));
     }
 
+    /**
+     * 게시글 목록 조회 (페이징)
+     * 
+     * @param pageable 페이징 정보 (page: 페이지 번호(0부터 시작), size: 페이지 크기)
+     * @return 페이징된 게시글 목록
+     * @example /api/v1/posts?page=0&size=10
+     */
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPosts());
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(Pageable pageable) {
+        return ResponseEntity.ok(postService.getAllPosts(pageable));
     }
 
+    /**
+     * 게시글 수정
+     * 
+     * @param postId  수정할 게시글 ID
+     * @param request 게시글 수정 요청 데이터
+     * @return 수정된 게시글 정보
+     */
     @PutMapping("/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
@@ -51,6 +70,12 @@ public class PostController {
         return ResponseEntity.ok(postService.updatePost(postId, request));
     }
 
+    /**
+     * 게시글 삭제
+     * 
+     * @param postId 삭제할 게시글 ID
+     * @return 204 No Content
+     */
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);

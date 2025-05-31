@@ -11,6 +11,8 @@ import com.tea.web.users.domain.model.User;
 import com.tea.web.users.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,10 +65,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> getAllPosts() {
-        return postRepository.findAll().stream()
-                .map(this::convertToResponseDto)
-                .collect(Collectors.toList());
+    public Page<PostResponseDto> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable)
+                .map(this::convertToResponseDto);
     }
 
     @Override
