@@ -1,4 +1,4 @@
-package com.tea.web.users.application.security.UserDetails;
+package com.tea.web.users.application.security.userdetails;
 
 import com.tea.web.users.domain.model.User;
 import com.tea.web.users.domain.repository.UserRepository;
