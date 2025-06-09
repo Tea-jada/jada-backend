@@ -5,8 +5,6 @@ import com.tea.web.users.domain.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Getter
 @NoArgsConstructor
 public class UserInfoResponseDto {
@@ -16,7 +14,7 @@ public class UserInfoResponseDto {
     private String isActive;
     private Role role;
 
-    public UserInfoResponseDto (User user){
+    public UserInfoResponseDto(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.username = user.getUsername();
