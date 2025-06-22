@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface PostService {
-    PostResponseDto createPost(PostCreateRequestDto request, UserDetails userDetails);
+    void createPost(PostCreateRequestDto request, UserDetails userDetails);
 
     PostResponseDto getPost(Long postId);
 

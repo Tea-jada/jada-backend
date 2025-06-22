@@ -106,9 +106,10 @@ public class PostController {
      * @example /api/v1/posts/search?keyword=검색어&page=0&size=10
      */
     @GetMapping("/search")
-    public ResponseEntity<Page<PostListResponseDto>> searchPosts(
+    public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> searchPosts(
             @RequestParam String keyword,
             Pageable pageable) {
-        return ResponseEntity.ok(postService.searchPosts(keyword, pageable));
+        Page<PostListResponseDto> responseDtos = postService.searchPosts(keyword, pageable);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_SEARCH_SUCCESS, responseDtos));
     }
 }

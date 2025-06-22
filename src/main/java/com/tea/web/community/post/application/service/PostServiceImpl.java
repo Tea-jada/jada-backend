@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     @Transactional
-    public PostResponseDto createPost(PostCreateRequestDto request, UserDetails userDetails) {
+    public void createPost(PostCreateRequestDto request, UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
 
@@ -51,8 +51,7 @@ public class PostServiceImpl implements PostService {
                 .img3l(request.getImg3l())
                 .build();
 
-        Post savedPost = postRepository.save(post);
-        return convertToResponseDto(savedPost);
+        postRepository.save(post);
     }
 
     @Override
