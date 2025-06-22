@@ -1,10 +1,14 @@
 package com.tea.web.community.post.presentation.controller;
 
+import com.tea.web.common.ResponseDataDto;
+import com.tea.web.common.ResponseMessageDto;
+import com.tea.web.common.ResponseStatus;
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
 import com.tea.web.community.post.application.dto.response.PostListResponseDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
 import com.tea.web.community.post.application.service.PostService;
+import com.tea.web.community.post.domain.model.Post;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,9 +33,10 @@ public class PostController {
      * @return 생성된 게시글 정보
      */
     @PostMapping
-    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostCreateRequestDto request,
+    public ResponseEntity<ResponseMessageDto> createPost(@RequestBody PostCreateRequestDto request,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(postService.createPost(request, userDetails));
+        postService.createPost(request, userDetails);
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.POST_CREATE_SUCCESS));
     }
 
     /**
@@ -41,8 +46,10 @@ public class PostController {
      * @return 게시글 상세 정보
      */
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> getPost(@PathVariable Long postId) {
-        return ResponseEntity.ok(postService.getPost(postId));
+    public ResponseEntity<ResponseDataDto<PostResponseDto>> getPost(@PathVariable Long postId) {
+        PostResponseDto responseDto = postService.getPost(postId);
+
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDto));
     }
 
     /**
@@ -53,8 +60,9 @@ public class PostController {
      * @example /api/v1/posts?page=0&size=10
      */
     @GetMapping
-    public ResponseEntity<Page<PostListResponseDto>> getAllPosts(Pageable pageable) {
-        return ResponseEntity.ok(postService.getAllPosts(pageable));
+    public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getAllPosts(Pageable pageable) {
+        Page<PostListResponseDto> responseDtos = postService.getAllPosts(pageable);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
     }
 
     /**
@@ -66,11 +74,12 @@ public class PostController {
      * @return 수정된 게시글 정보
      */
     @PutMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> updatePost(
+    public ResponseEntity<ResponseDataDto<PostResponseDto>> updatePost(
             @PathVariable Long postId,
             @RequestBody PostUpdateRequestDto request,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(postService.updatePost(postId, request, userDetails));
+        PostResponseDto responseDto = postService.updatePost(postId, request, userDetails);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_UPDATE_SUCCESS, responseDto));
     }
 
     /**
@@ -81,11 +90,11 @@ public class PostController {
      * @return 204 No Content
      */
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(
+    public ResponseEntity<ResponseMessageDto> deletePost(
             @PathVariable Long postId,
             @AuthenticationPrincipal UserDetails userDetails) {
         postService.deletePost(postId, userDetails);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.POST_DELETE_SUCCESS));
     }
 
     /**
