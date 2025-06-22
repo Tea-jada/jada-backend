@@ -6,8 +6,10 @@ import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
 import com.tea.web.community.post.application.dto.response.PostListResponseDto;
+import com.tea.web.community.post.domain.model.Category;
 import com.tea.web.community.post.domain.model.Post;
 import com.tea.web.community.post.domain.repository.PostRepository;
+import com.tea.web.users.domain.model.Role;
 import com.tea.web.users.domain.model.User;
 import com.tea.web.users.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +37,17 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     @Transactional
-    public PostResponseDto createPost(PostCreateRequestDto request, UserDetails userDetails) {
+    public void createPost(PostCreateRequestDto request, UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+
+        // ARTICLE(기사)와 NOTICE(공지사항)은 ADMIN만 작성가능
+        if (request.getCategory() == Category.ARTICLE ||
+                request.getCategory() == Category.NOTICE) {
+            if (user.getRole() != Role.ADMIN) {
+                throw new CustomException(ErrorType.ADMIN_ONLY_POST);
+            }
+        }
 
         Post post = Post.builder()
                 .user(user)
@@ -51,8 +61,7 @@ public class PostServiceImpl implements PostService {
                 .img3l(request.getImg3l())
                 .build();
 
-        Post savedPost = postRepository.save(post);
-        return convertToResponseDto(savedPost);
+        postRepository.save(post);
     }
 
     @Override
