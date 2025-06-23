@@ -45,7 +45,7 @@ public class PostController {
      * @return 게시글 상세 정보
      */
     @GetMapping("/{postId}")
-    public ResponseEntity<ResponseDataDto<PostResponseDto>> getPost(@PathVariable Long postId) {
+    public ResponseEntity<ResponseDataDto<PostResponseDto>> getPost(@PathVariable("postId") Long postId) {
         PostResponseDto responseDto = postService.getPost(postId);
 
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDto));
