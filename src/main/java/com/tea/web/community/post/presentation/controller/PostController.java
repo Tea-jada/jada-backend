@@ -52,18 +52,20 @@ public class PostController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDto));
     }
 
-    /**
-     * 게시글 목록 조회 (페이징)
-     * 
-     * @param pageable 페이징 정보 (page: 페이지 번호(0부터 시작), size: 페이지 크기)
-     * @return 페이징된 게시글 목록 (id, title, content, thumbnailUrl, updatedAt)
-     * @example /api/v1/posts?page=0&size=10
-     */
-    @GetMapping
-    public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getAllPosts(Pageable pageable) {
-        Page<PostListResponseDto> responseDtos = postService.getAllPosts(pageable);
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
-    }
+    // /**
+    // * 게시글 목록 조회 (페이징)
+    // *
+    // * @param pageable 페이징 정보 (page: 페이지 번호(0부터 시작), size: 페이지 크기)
+    // * @return 페이징된 게시글 목록 (id, title, content, thumbnailUrl, updatedAt)
+    // * @example /api/v1/posts?page=0&size=10
+    // */
+    // @GetMapping
+    // public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>>
+    // getAllPosts(Pageable pageable) {
+    // Page<PostListResponseDto> responseDtos = postService.getAllPosts(pageable);
+    // return ResponseEntity.ok(new
+    // ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
+    // }
 
     /**
      * 게시글 수정
@@ -111,5 +113,21 @@ public class PostController {
             Pageable pageable) {
         Page<PostListResponseDto> responseDtos = postService.searchPosts(keyword, pageable);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_SEARCH_SUCCESS, responseDtos));
+    }
+
+    /**
+     * 카테고리별 게시글 목록 조회 (페이징)
+     *
+     * @param category 카테고리명 (예: notice, article, board)
+     * @param pageable 페이징 정보
+     * @return 페이징된 게시글 목록
+     * @example /api/v1/posts/category/notice?page=0&size=10
+     */
+    @GetMapping("/category/{category}")
+    public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getPostsByCategory(
+            @PathVariable String category,
+            Pageable pageable) {
+        Page<PostListResponseDto> responseDtos = postService.getPostsByCategory(category, pageable);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
     }
 }

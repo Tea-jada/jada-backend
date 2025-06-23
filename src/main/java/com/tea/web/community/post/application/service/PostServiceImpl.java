@@ -112,6 +112,18 @@ public class PostServiceImpl implements PostService {
                 .map(this::convertToListResponseDto);
     }
 
+    @Override
+    public Page<PostListResponseDto> getPostsByCategory(String category, Pageable pageable) {
+        Category cat;
+        try {
+            cat = Category.valueOf(category.toUpperCase()); // 카테고리 Enum과 비교하기 위해 대문자로 변환
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(ErrorType.POST_NOT_FOUND); // 존재하지 않는 카테고리를 찾았을 때
+        }
+        return postRepository.findByCategory(cat, pageable)
+                .map(this::convertToListResponseDto);
+    }
+
     private PostResponseDto convertToResponseDto(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())

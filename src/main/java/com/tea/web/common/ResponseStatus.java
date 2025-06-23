@@ -11,6 +11,12 @@ public enum ResponseStatus {
   SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입에 성공했습니다."),
   GET_USER_SUCCESS(HttpStatus.OK, "유저 조회에 성공했습니다."),
 
+  POST_CREATE_SUCCESS(HttpStatus.CREATED, "게시글 생성에 성공했습니다."),
+  POST_READ_SUCCESS(HttpStatus.OK, "게시글 조회에 성공했습니다."),
+  POST_UPDATE_SUCCESS(HttpStatus.OK, "게시글 수정에 성공했습니다."),
+  POST_DELETE_SUCCESS(HttpStatus.OK, "게시글 삭제에 성공했습니다."),
+  POST_SEARCH_SUCCESS(HttpStatus.OK, "게시글 검색에 성공했습니다."),
+
   COMMENT_CREATE_SUCCESS(HttpStatus.CREATED, "댓글 생성에 성공했습니다."),
   COMMENT_READ_SUCCESS(HttpStatus.OK, "댓글 생성에 성공했습니다."),
   COMMENT_UPDATE_SUCCESS(HttpStatus.OK, "댓글 수정에 성공했습니다."),
