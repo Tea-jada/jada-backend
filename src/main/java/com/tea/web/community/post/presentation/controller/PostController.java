@@ -8,7 +8,6 @@ import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
 import com.tea.web.community.post.application.dto.response.PostListResponseDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
 import com.tea.web.community.post.application.service.PostService;
-import com.tea.web.community.post.domain.model.Post;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -125,7 +124,7 @@ public class PostController {
      */
     @GetMapping("/category/{category}")
     public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getPostsByCategory(
-            @PathVariable String category,
+            @PathVariable("category") String category,
             Pageable pageable) {
         Page<PostListResponseDto> responseDtos = postService.getPostsByCategory(category, pageable);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
