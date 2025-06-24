@@ -31,7 +31,15 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final String[] permitRequests = { "/api/v1/users/signup", "/api/v1/users/login" };
+    private final String[] permitRequests = {
+            "/api/v1/users/signup",
+            "/api/v1/users/login",
+
+            // posts
+            "/api/v1/posts/category/**", // 카테고리 별 조회
+            "/api/v1/posts/search", // 검색
+            "/api/v1/posts/*" // 상세 조회
+    };
 
     @Bean
     public PasswordEncoder passwordEncoder() {

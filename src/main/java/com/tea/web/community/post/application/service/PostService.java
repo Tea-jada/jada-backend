@@ -20,4 +20,6 @@ public interface PostService {
     PostResponseDto updatePost(Long postId, PostUpdateRequestDto request, UserDetails userDetails);
 
     void deletePost(Long postId, UserDetails userDetails);
+
+    Page<PostListResponseDto> getPostsByCategory(String category, Pageable pageable);
 }
