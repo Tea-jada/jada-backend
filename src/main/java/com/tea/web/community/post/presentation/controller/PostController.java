@@ -74,9 +74,10 @@ public class PostController {
      * @param userDetails 현재 인증된 사용자 정보
      * @return 수정된 게시글 정보
      */
+    // TODO: 수정할 내용에 썸네일, 이미지 도 포함시키기
     @PutMapping("/{postId}")
     public ResponseEntity<ResponseDataDto<PostResponseDto>> updatePost(
-            @PathVariable Long postId,
+            @PathVariable("postId") Long postId,
             @RequestBody PostUpdateRequestDto request,
             @AuthenticationPrincipal UserDetails userDetails) {
         PostResponseDto responseDto = postService.updatePost(postId, request, userDetails);
@@ -92,7 +93,7 @@ public class PostController {
      */
     @DeleteMapping("/{postId}")
     public ResponseEntity<ResponseMessageDto> deletePost(
-            @PathVariable Long postId,
+            @PathVariable("postId") Long postId,
             @AuthenticationPrincipal UserDetails userDetails) {
         postService.deletePost(postId, userDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.POST_DELETE_SUCCESS));
