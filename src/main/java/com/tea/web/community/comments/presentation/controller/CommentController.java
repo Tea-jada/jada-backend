@@ -1,4 +1,4 @@
-package com.tea.web.community.comments.controller;
+package com.tea.web.community.comments.presentation.controller;
 
 import com.tea.web.community.comments.application.dto.request.CommentRequestDto;
 import com.tea.web.community.comments.application.dto.response.CommentResponseDto;
