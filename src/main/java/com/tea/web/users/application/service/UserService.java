@@ -53,7 +53,7 @@ public class UserService {
      */
     @Transactional
     public void adminSignup(AdminSignupRequestDto requestDto) {
-        if (requestDto.getAdminCode().equals(adminCode)) {
+        if (!requestDto.getAdminCode().equals(adminCode)) {
             throw new CustomException(ErrorType.INVALID_ADMIN_CODE);
         }
 
