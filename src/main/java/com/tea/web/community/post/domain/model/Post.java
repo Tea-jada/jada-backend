@@ -28,8 +28,8 @@ public class Post extends BaseEntity {
     private String title;
 
     @Lob // Text (65,535자(약 64KB, 일반 게시글 충분))로 DB 설계
-    @Column(nullable = false)
-    private String content; // HTML or Markdown
+    @Column(columnDefinition = "text", nullable = false)
+    private String content; // HTML 형식으로 저장
 
     @Enumerated(EnumType.STRING)
     @Column(length = 30, nullable = false)
