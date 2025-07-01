@@ -5,6 +5,7 @@ import com.tea.web.common.ResponseMessageDto;
 import com.tea.web.common.ResponseStatus;
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
+import com.tea.web.community.post.application.dto.response.ImageResponseDto;
 import com.tea.web.community.post.application.dto.response.PostListResponseDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
 import com.tea.web.community.post.application.service.PostService;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -129,5 +131,17 @@ public class PostController {
             Pageable pageable) {
         Page<PostListResponseDto> responseDtos = postService.getPostsByCategory(category, pageable);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
+    }
+
+    /**
+     * 이미지 업로드
+     * 
+     * @param file
+     * @return
+     */
+    @PostMapping("/upload")
+    public ResponseEntity<ResponseDataDto<ImageResponseDto>> uploadImage(@RequestParam("file") MultipartFile file) {
+        ImageResponseDto response = postService.uploadImage(file);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.IMAGE_UPLOAD_SUCCESS, response));
     }
 }

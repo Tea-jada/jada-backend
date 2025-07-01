@@ -2,7 +2,8 @@ package com.tea.web.community.comments.presentation.controller;
 
 import com.tea.web.community.comments.application.dto.request.CommentRequestDto;
 import com.tea.web.community.comments.application.dto.response.CommentResponseDto;
-import com.tea.web.community.comments.service.CommentService;
+import com.tea.web.community.comments.application.service.CommentService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class CommentController {
      */
     @PostMapping("posts/{postId}/comments")
     public ResponseEntity<ResponseMessageDto> createComment(@RequestBody CommentRequestDto requestDto,
-            @PathVariable long postId,
+            @PathVariable("postId") long postId,
             @AuthenticationPrincipal UserDetails userDetails) {
         commentService.createComment(requestDto, postId, userDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.COMMENT_CREATE_SUCCESS));
@@ -43,7 +44,7 @@ public class CommentController {
      */
     @GetMapping("/post/{postId}")
     public ResponseEntity<ResponseDataDto<Page<CommentResponseDto>>> getComments(
-            @PathVariable Long postId,
+            @PathVariable("postId") Long postId,
             @RequestParam(defaultValue = "0") int page) {
         Page<CommentResponseDto> responseDto = commentService.getComments(postId, page);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.COMMENT_READ_SUCCESS, responseDto));
@@ -58,7 +59,7 @@ public class CommentController {
      */
     @PutMapping("/{commentId}")
     public ResponseEntity<ResponseDataDto<CommentResponseDto>> updateComment(
-            @PathVariable Long commentId,
+            @PathVariable("commentId") Long commentId,
             @RequestBody CommentRequestDto requestDto,
             @AuthenticationPrincipal UserDetails userDetails) {
         CommentResponseDto responseDto = commentService.updateComment(commentId, requestDto, userDetails);
@@ -73,7 +74,7 @@ public class CommentController {
      */
     @DeleteMapping("/{commentId}")
     public ResponseEntity<ResponseDataDto<CommentResponseDto>> deleteComment(
-            @PathVariable Long commentId,
+            @PathVariable("commentId") Long commentId,
             @AuthenticationPrincipal UserDetails userDetails) {
         CommentResponseDto responseDto = commentService.deleteComment(commentId, userDetails);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.COMMENT_DELETE_SUCCESS, responseDto));

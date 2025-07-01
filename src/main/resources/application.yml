@@ -24,6 +24,11 @@ spring:
       username: ${REDIS_USER}
       password: ${REDIS_PASSWORD}
 
+  servlet:
+    multipart:
+      max-file-size: 20MB # 한 개 파일의 최대 크기
+      max-request-size: 20MB # 요청 전체의 최대 크기 (여러 파일 업로드 시)
+
 # server port
 server:
   port: 8080
