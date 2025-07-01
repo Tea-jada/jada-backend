@@ -1,4 +1,4 @@
-package com.tea.web.community.comments.service;
+package com.tea.web.community.comments.application.service;
 
 import com.tea.web.common.CustomException;
 import com.tea.web.common.ErrorType;
