@@ -1,10 +1,13 @@
 package com.tea.web.community.post.application.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.tea.web.common.CustomException;
 import com.tea.web.common.ErrorType;
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
+import com.tea.web.community.post.application.dto.response.ImageResponseDto;
 import com.tea.web.community.post.application.dto.response.PostListResponseDto;
 import com.tea.web.community.post.domain.model.Category;
 import com.tea.web.community.post.domain.model.Post;
@@ -12,13 +15,18 @@ import com.tea.web.community.post.domain.repository.PostRepository;
 import com.tea.web.users.domain.model.Role;
 import com.tea.web.users.domain.model.User;
 import com.tea.web.users.domain.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
+
+import java.io.IOException;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +35,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final Cloudinary cloudinary;
 
     /**
      * 게시글 생성
@@ -148,5 +157,20 @@ public class PostServiceImpl implements PostService {
                 .thumbnailUrl(post.getThumbnailUrl())
                 .updatedAt(post.getUpdatedAt())
                 .build();
+    }
+
+    @Override
+    public ImageResponseDto uploadImage(MultipartFile file) {
+        try {
+            // 파일을 Cloudinary에 업로드하고 결과를 Map으로 받음
+            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+
+            // 업로드된 이미지의 URL을 반환
+            String imgUrl = uploadResult.get("secure_url").toString();
+
+            return ImageResponseDto.builder().imgUrl(imgUrl).build();
+        } catch (IOException e) {
+            throw new CustomException(ErrorType.IMAGE_UPLOAD_FAIL);
+        }
     }
 }
