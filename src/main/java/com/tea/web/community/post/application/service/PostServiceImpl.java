@@ -146,6 +146,8 @@ public class PostServiceImpl implements PostService {
                 .img1l(post.getImg1l())
                 .img2l(post.getImg2l())
                 .img3l(post.getImg3l())
+                .section(post.getSection())
+                .subSection(post.getSubSection())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
