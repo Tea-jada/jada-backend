@@ -68,6 +68,8 @@ public class PostServiceImpl implements PostService {
                 .img1l(request.getImg1l())
                 .img2l(request.getImg2l())
                 .img3l(request.getImg3l())
+                .section(request.getSection())
+                .subSection(request.getSubSection())
                 .build();
 
         postRepository.save(post);
@@ -144,6 +146,8 @@ public class PostServiceImpl implements PostService {
                 .img1l(post.getImg1l())
                 .img2l(post.getImg2l())
                 .img3l(post.getImg3l())
+                .section(post.getSection())
+                .subSection(post.getSubSection())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
@@ -155,6 +159,8 @@ public class PostServiceImpl implements PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .thumbnailUrl(post.getThumbnailUrl())
+                .section(post.getSection())
+                .subSection(post.getSubSection())
                 .updatedAt(post.getUpdatedAt())
                 .build();
     }

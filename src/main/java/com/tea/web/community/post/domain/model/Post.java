@@ -47,9 +47,15 @@ public class Post extends BaseEntity {
     @Column(name = "img3l", length = 600)
     private String img3l;
 
+    @Column(length = 20, nullable = false)
+    private Section section;
+
+    @Column(length = 10, nullable = false)
+    private SubSection subSection;
+
     @Builder
     public Post(User user, String type, String title, String content, Category category,
-            String thumbnailUrl, String img1l, String img2l, String img3l) {
+            String thumbnailUrl, String img1l, String img2l, String img3l, Section section, SubSection subSection) {
         this.user = user;
         this.type = type;
         this.title = title;
@@ -59,6 +65,8 @@ public class Post extends BaseEntity {
         this.img1l = img1l;
         this.img2l = img2l;
         this.img3l = img3l;
+        this.section = section;
+        this.subSection = subSection;
     }
 
     public void update(String title, String content) {
