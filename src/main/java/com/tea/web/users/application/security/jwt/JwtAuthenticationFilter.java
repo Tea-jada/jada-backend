@@ -2,6 +2,8 @@ package com.tea.web.users.application.security.jwt;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tea.web.common.ResponseMessageDto;
+import com.tea.web.common.ResponseStatus;
 import com.tea.web.users.application.dto.request.LoginRequestDto;
 import com.tea.web.users.application.security.userdetails.UserDetailsImpl;
 import com.tea.web.users.domain.model.Role;
@@ -48,7 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-            Authentication authResult) {
+            Authentication authResult) throws IOException {
         Long userId = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getId();
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getEmail(); // 로그인 시 ID = 유저의 이메일
         String nickname = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUsername(); // 유저의 이름
@@ -56,8 +58,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = jwtUtil.createToken(userId, username, nickname, role); // AccessToken
         String refreshToken = jwtUtil.createRefreshToken(username); // RefreshToken
+
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
         response.addHeader(JwtUtil.REFRESH_TOKEN_HEADER, refreshToken);
+
+        // 로그인 성공 메시지 JSON 바디로 응답
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        ResponseMessageDto responseMessage = new ResponseMessageDto(ResponseStatus.LOGIN_SUCCESS);
+        new ObjectMapper().writeValue(response.getWriter(), responseMessage);
     }
 
     @Override

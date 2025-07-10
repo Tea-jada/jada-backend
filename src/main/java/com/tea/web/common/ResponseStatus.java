@@ -10,6 +10,7 @@ public enum ResponseStatus {
 
   SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입에 성공했습니다."),
   GET_USER_SUCCESS(HttpStatus.OK, "유저 조회에 성공했습니다."),
+  LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공했습니다."),
 
   POST_CREATE_SUCCESS(HttpStatus.CREATED, "게시글 생성에 성공했습니다."),
   POST_READ_SUCCESS(HttpStatus.OK, "게시글 조회에 성공했습니다."),
