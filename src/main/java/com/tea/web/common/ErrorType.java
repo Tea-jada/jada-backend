@@ -23,6 +23,9 @@ public enum ErrorType {
   INVALID_ADMIN_CODE(HttpStatus.BAD_REQUEST, "어드민 코드가 틀렸습니다."),
   UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "본인 정보만 접근할 수 있습니다."),
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),
+  DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 존재하는 이메일입니다."),
+  INVALID_EMAIL_FORMAT(HttpStatus.BAD_REQUEST, "유효하지 않은 이메일 양식입니다."),
+  INVALID_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "비밀번호 형식이 올바르지 않습니다."),
 
   ADMIN_ONLY_POST(HttpStatus.FORBIDDEN, "어드민만 작성할 수 있습니다."),
   POST_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
