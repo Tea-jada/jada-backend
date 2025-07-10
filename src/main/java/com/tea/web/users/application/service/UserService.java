@@ -34,6 +34,9 @@ public class UserService {
      */
     @Transactional
     public void signup(SignupRequestDto signupRequestDto) {
+        if (userRepository.existsByEmail(signupRequestDto.getEmail())) {
+            throw new CustomException(ErrorType.DUPLICATE_EMAIL);
+        }
 
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
