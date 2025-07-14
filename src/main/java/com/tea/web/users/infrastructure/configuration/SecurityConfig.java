@@ -32,6 +32,7 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final String[] permitRequests = {
+            "/api/v1/users/signup/admin",
             "/api/v1/users/signup",
             "/api/v1/users/login",
 
