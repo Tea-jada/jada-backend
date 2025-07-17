@@ -30,6 +30,9 @@ public enum ErrorType {
   ADMIN_ONLY_POST(HttpStatus.FORBIDDEN, "어드민만 작성할 수 있습니다."),
   POST_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
   FORBIDDEN(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
+  CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다."),
+  SECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "섹션를 찾을 수 없습니다."),
+  SUB_SECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "서브섹션를 찾을 수 없습니다."),
 
   COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
   NOT_COMMENT_AUTHOR(HttpStatus.FORBIDDEN, "본인이 작성한 댓글만 접근할 수 있습니다."),

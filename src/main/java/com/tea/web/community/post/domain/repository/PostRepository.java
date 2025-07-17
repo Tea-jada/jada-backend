@@ -3,6 +3,7 @@ package com.tea.web.community.post.domain.repository;
 import com.tea.web.community.post.domain.model.Category;
 import com.tea.web.community.post.domain.model.Post;
 import com.tea.web.community.post.domain.model.Section;
+import com.tea.web.community.post.domain.model.SubSection;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByCategory(Category category, Pageable pageable);
 
     Page<Post> findBySection(Section section, Pageable pageable);
+
+    Page<Post> findBySectionAndSubSection(Section section, SubSection subSection, Pageable pageable);
 }
