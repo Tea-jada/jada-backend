@@ -15,9 +15,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.title LIKE %:keyword% OR p.user.username LIKE %:keyword%")
     Page<Post> searchByTitleOrUsername(@Param("keyword") String keyword, Pageable pageable);
 
-    Page<Post> findByCategory(Category category, Pageable pageable);
+    Page<Post> findByCategoryOrderByUpdatedAtDesc(Category category, Pageable pageable);
 
-    Page<Post> findBySection(Section section, Pageable pageable);
+    Page<Post> findBySectionOrderByUpdatedAtDesc(Section section, Pageable pageable);
 
-    Page<Post> findBySectionAndSubSection(Section section, SubSection subSection, Pageable pageable);
+    Page<Post> findBySectionAndSubSectionOrderByUpdatedAtDesc(Section section, SubSection subSection,
+            Pageable pageable);
 }
