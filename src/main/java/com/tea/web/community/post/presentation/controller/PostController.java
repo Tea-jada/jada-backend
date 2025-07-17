@@ -134,6 +134,37 @@ public class PostController {
     }
 
     /**
+     * 섹션별 게시글 목록 조회 (페이징)
+     * 
+     * @param section
+     * @param pageable
+     * @return
+     */
+    @GetMapping("/section/{section}")
+    public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getPostsBySection(
+            @PathVariable("section") String section,
+            Pageable pageable) {
+        Page<PostListResponseDto> responseDtos = postService.getPostsBySection(section, pageable);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
+    }
+
+    /**
+     * 서브섹션별 게시글 목록 조회 (페이징)
+     * 
+     * @param subSection
+     * @param pageable
+     * @return
+     */
+    @GetMapping("/section/{section}/sub-section/{subSection}")
+    public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getPostsBySubSection(
+            @PathVariable("section") String section,
+            @PathVariable("subSection") String subSection,
+            Pageable pageable) {
+        Page<PostListResponseDto> responseDtos = postService.getPostsBySubSection(section, subSection, pageable);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
+    }
+
+    /**
      * 이미지 업로드
      * 
      * @param file
