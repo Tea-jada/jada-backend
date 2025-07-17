@@ -26,5 +26,7 @@ public interface PostService {
 
     Page<PostListResponseDto> getPostsByCategory(String category, Pageable pageable);
 
+    Page<PostListResponseDto> getPostsBySection(String section, Pageable pageable);
+
     ImageResponseDto uploadImage(MultipartFile file);
 }
