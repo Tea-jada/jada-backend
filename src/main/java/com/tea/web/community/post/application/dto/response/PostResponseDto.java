@@ -23,6 +23,7 @@ public class PostResponseDto {
     private Section section;
     private SubSection subSection;
     private String email;
+    private String username;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
