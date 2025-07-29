@@ -18,9 +18,6 @@ public class PostResponseDto {
     private String type;
     private Category category;
     private String thumbnailUrl;
-    private String img1l;
-    private String img2l;
-    private String img3l;
     private Section section;
     private SubSection subSection;
     private LocalDateTime createdAt;

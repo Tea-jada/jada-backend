@@ -38,15 +38,6 @@ public class Post extends BaseEntity {
     @Column(name = "thumbnail_url", length = 600, nullable = false)
     private String thumbnailUrl;
 
-    @Column(name = "img1l", length = 600)
-    private String img1l;
-
-    @Column(name = "img2l", length = 600)
-    private String img2l;
-
-    @Column(name = "img3l", length = 600)
-    private String img3l;
-
     @Column(length = 20, nullable = false)
     private Section section;
 
@@ -62,9 +53,6 @@ public class Post extends BaseEntity {
         this.content = content;
         this.category = category;
         this.thumbnailUrl = thumbnailUrl;
-        this.img1l = img1l;
-        this.img2l = img2l;
-        this.img3l = img3l;
         this.section = section;
         this.subSection = subSection;
     }
