@@ -178,6 +178,7 @@ public class PostServiceImpl implements PostService {
                 .thumbnailUrl(post.getThumbnailUrl())
                 .section(post.getSection())
                 .subSection(post.getSubSection())
+                .email(post.getUser().getEmail())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
