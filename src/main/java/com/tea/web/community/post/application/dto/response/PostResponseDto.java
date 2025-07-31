@@ -9,6 +9,8 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+import javax.management.relation.Role;
+
 @Getter
 @Builder
 public class PostResponseDto {
@@ -18,11 +20,10 @@ public class PostResponseDto {
     private String type;
     private Category category;
     private String thumbnailUrl;
-    private String img1l;
-    private String img2l;
-    private String img3l;
     private Section section;
     private SubSection subSection;
+    private String email;
+    private String username;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

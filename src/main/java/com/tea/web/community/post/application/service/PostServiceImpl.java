@@ -133,7 +133,7 @@ public class PostServiceImpl implements PostService {
         } catch (IllegalArgumentException e) {
             throw new CustomException(ErrorType.CATEGORY_NOT_FOUND); // 존재하지 않는 카테고리를 찾았을 때
         }
-        return postRepository.findByCategory(cat, pageable)
+        return postRepository.findByCategoryOrderByUpdatedAtDesc(cat, pageable)
                 .map(this::convertToListResponseDto);
     }
 
@@ -145,7 +145,7 @@ public class PostServiceImpl implements PostService {
         } catch (IllegalArgumentException e) {
             throw new CustomException(ErrorType.SECTION_NOT_FOUND); // 존재하지 않는 섹션을 찾았을 때
         }
-        return postRepository.findBySection(sec, pageable)
+        return postRepository.findBySectionOrderByUpdatedAtDesc(sec, pageable)
                 .map(this::convertToListResponseDto);
     }
 
@@ -164,7 +164,7 @@ public class PostServiceImpl implements PostService {
             throw new CustomException(ErrorType.SUB_SECTION_NOT_FOUND); // 존재하지 않는 서브섹션을 찾았을 때
         }
 
-        return postRepository.findBySectionAndSubSection(sec, sub, pageable)
+        return postRepository.findBySectionAndSubSectionOrderByUpdatedAtDesc(sec, sub, pageable)
                 .map(this::convertToListResponseDto);
     }
 
@@ -176,11 +176,10 @@ public class PostServiceImpl implements PostService {
                 .type(post.getType())
                 .category(post.getCategory())
                 .thumbnailUrl(post.getThumbnailUrl())
-                .img1l(post.getImg1l())
-                .img2l(post.getImg2l())
-                .img3l(post.getImg3l())
                 .section(post.getSection())
                 .subSection(post.getSubSection())
+                .email(post.getUser().getEmail())
+                .username(post.getUser().getUsername())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
