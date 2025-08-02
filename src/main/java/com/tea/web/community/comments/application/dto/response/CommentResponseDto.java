@@ -1,5 +1,7 @@
 package com.tea.web.community.comments.application.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.tea.web.community.comments.domain.model.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +12,14 @@ public class CommentResponseDto {
     private Long id;
     private String comment;
     private Long postId;
+    private String username;
+    private LocalDateTime updatedAt;
 
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
         this.comment = comment.getComment();
         this.postId = comment.getPost().getId();
+        this.username = comment.getUser().getUsername();
+        this.updatedAt = comment.getUpdatedAt();
     }
 }
