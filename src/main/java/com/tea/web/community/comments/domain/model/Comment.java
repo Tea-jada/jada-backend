@@ -1,5 +1,6 @@
 package com.tea.web.community.comments.domain.model;
 
+import com.tea.web.common.BaseEntity;
 import com.tea.web.community.post.domain.model.Post;
 import com.tea.web.users.domain.model.User;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Comment {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

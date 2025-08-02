@@ -33,7 +33,7 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
 
-        User user = userRepository.findByUsername(userDetails.getUsername())
+        User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
 
         Comment newComment = new Comment(requestDto.getComment(), post, user);
