@@ -4,6 +4,7 @@ import com.tea.web.common.CustomException;
 import com.tea.web.common.ErrorType;
 import com.tea.web.users.application.dto.request.AdminSignupRequestDto;
 import com.tea.web.users.application.dto.request.SignupRequestDto;
+import com.tea.web.users.application.dto.request.UpdateUserInfoRequestDto;
 import com.tea.web.users.application.dto.response.UserInfoResponseDto;
 import com.tea.web.users.domain.model.Role;
 import com.tea.web.users.domain.model.User;
@@ -93,11 +94,28 @@ public class UserService {
      */
     @Transactional
     public UserInfoResponseDto getMyInfo(Long userId, UserDetails userDetails) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+        User user = getUser(userId);
 
         checkUserAuthority(user, userDetails);
 
         return new UserInfoResponseDto(user);
+    }
+
+    /**
+     * 사용자 정보 수정
+     * 
+     * @param userId
+     * @param requestDto
+     * @param userDetails
+     */
+    @Transactional
+    public void updateUserInfo(Long userId, UpdateUserInfoRequestDto requestDto, UserDetails userDetails) {
+        User user = getUser(userId);
+
+        checkUserAuthority(user, userDetails);
+
+        user.update(requestDto, passwordEncoder);
+        userRepository.save(user);
     }
 
     /**
@@ -108,12 +126,16 @@ public class UserService {
      */
     @Transactional
     public void deleteUser(Long userId, UserDetails userDetails) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+        User user = getUser(userId);
 
         checkUserAuthority(user, userDetails);
 
         user.softDeletedBy(userDetails.getUsername());
         userRepository.save(user);
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
     }
 
     private void checkUserAuthority(User user, UserDetails userDetails) {

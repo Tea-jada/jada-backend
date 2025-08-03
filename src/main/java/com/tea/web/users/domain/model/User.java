@@ -2,6 +2,9 @@ package com.tea.web.users.domain.model;
 
 import com.tea.web.common.BaseEntity;
 import com.tea.web.community.post.domain.model.Post;
+import com.tea.web.users.application.dto.request.UpdateUserInfoRequestDto;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,5 +56,17 @@ public class User extends BaseEntity {
                 .build();
         user.createdBy(email);
         return user;
+    }
+
+    public void update(UpdateUserInfoRequestDto requestDto, PasswordEncoder passwordEncoder) {
+        if (requestDto.getEmail() != null) {
+            this.email = requestDto.getEmail();
+        }
+        if (requestDto.getUsername() != null) {
+            this.username = requestDto.getUsername();
+        }
+        if (requestDto.getPassword() != null) {
+            this.password = passwordEncoder.encode(requestDto.getPassword());
+        }
     }
 }

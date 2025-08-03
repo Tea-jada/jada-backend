@@ -5,6 +5,7 @@ import com.tea.web.common.ResponseMessageDto;
 import com.tea.web.common.ResponseStatus;
 import com.tea.web.users.application.dto.request.AdminSignupRequestDto;
 import com.tea.web.users.application.dto.request.SignupRequestDto;
+import com.tea.web.users.application.dto.request.UpdateUserInfoRequestDto;
 import com.tea.web.users.application.dto.response.UserInfoResponseDto;
 import com.tea.web.users.application.service.UserService;
 import jakarta.validation.Valid;
@@ -74,6 +75,18 @@ public class UserController {
             @AuthenticationPrincipal UserDetails userDetails) {
         UserInfoResponseDto userInfo = userService.getMyInfo(userId, userDetails);
         return new ResponseDataDto<>(ResponseStatus.GET_USER_SUCCESS, userInfo);
+    }
+
+    /**
+     * 사용자 정보 수정
+     */
+    @PatchMapping("/info/{userId}")
+    public ResponseMessageDto updateUserInfo(
+            @PathVariable("userId") Long userId,
+            @RequestBody UpdateUserInfoRequestDto requestDto,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        userService.updateUserInfo(userId, requestDto, userDetails);
+        return new ResponseMessageDto(ResponseStatus.UPDATE_USER_SUCCESS);
     }
 
     /**
