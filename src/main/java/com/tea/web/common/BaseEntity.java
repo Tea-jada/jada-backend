@@ -39,17 +39,17 @@ public class BaseEntity {
         this.updatedBy = email;
     }
 
-    protected void updatedBy(String username){
-        this.updatedBy = username;
+    protected void updatedBy(String email) {
+        this.updatedBy = email;
     }
 
-    protected void softDeletedBy(String username) {
+    public void softDeletedBy(String email) {
         this.isDeleted = true;
-        this.deletedBy = username;
+        this.deletedBy = email;
         this.deletedAt = LocalDateTime.now();
     }
 
-    protected void restoreBy(String username){
+    protected void restoreBy(String username) {
         this.isDeleted = false;
         this.deletedBy = null;
         this.deletedAt = null;

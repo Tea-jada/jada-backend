@@ -79,6 +79,7 @@ public class UserService {
      * @param pageable
      * @return 유저 목록
      */
+    @Transactional
     public Page<UserInfoResponseDto> getUserInfos(Pageable pageable) {
         Page<User> usersPage = userRepository.findAllByIsDeletedFalse(pageable);
         return usersPage.map(UserInfoResponseDto::new);
@@ -90,9 +91,32 @@ public class UserService {
      * @param userDetails
      * @return 로그인한 사용자 정보
      */
+    @Transactional
     public UserInfoResponseDto getMyInfo(Long userId, UserDetails userDetails) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
 
+        checkUserAuthority(user, userDetails);
+
+        return new UserInfoResponseDto(user);
+    }
+
+    /**
+     * 사용자 탈퇴
+     * 
+     * @param userId
+     * @param userDetails
+     */
+    @Transactional
+    public void deleteUser(Long userId, UserDetails userDetails) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+
+        checkUserAuthority(user, userDetails);
+
+        user.softDeletedBy(userDetails.getUsername());
+        userRepository.save(user);
+    }
+
+    private void checkUserAuthority(User user, UserDetails userDetails) {
         String email = user.getEmail();
 
         // 어드민이 아닌 경우 본인 정보만 조회 가능
@@ -101,7 +125,5 @@ public class UserService {
                 throw new CustomException(ErrorType.UNAUTHORIZED_USER);
             }
         }
-
-        return new UserInfoResponseDto(user);
     }
 }

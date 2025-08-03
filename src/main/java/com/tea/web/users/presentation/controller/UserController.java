@@ -70,9 +70,23 @@ public class UserController {
      */
     @GetMapping("/info/{userId}")
     public ResponseDataDto<UserInfoResponseDto> getMyInfo(
-            @PathVariable Long userId,
+            @PathVariable("userId") Long userId,
             @AuthenticationPrincipal UserDetails userDetails) {
         UserInfoResponseDto userInfo = userService.getMyInfo(userId, userDetails);
         return new ResponseDataDto<>(ResponseStatus.GET_USER_SUCCESS, userInfo);
+    }
+
+    /**
+     * 사용자 탈퇴
+     * 
+     * @param userId
+     * @return "탈퇴에 성공했습니다."
+     */
+    @DeleteMapping("/info/{userId}")
+    public ResponseMessageDto deleteUser(
+            @PathVariable("userId") Long userId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        userService.deleteUser(userId, userDetails);
+        return new ResponseMessageDto(ResponseStatus.DELETE_USER_SUCCESS);
     }
 }
