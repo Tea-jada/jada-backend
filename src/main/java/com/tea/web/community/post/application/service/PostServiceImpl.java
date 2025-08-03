@@ -193,6 +193,7 @@ public class PostServiceImpl implements PostService {
                 .thumbnailUrl(post.getThumbnailUrl())
                 .section(post.getSection())
                 .subSection(post.getSubSection())
+                .username(post.getUser().getUsername())
                 .updatedAt(post.getUpdatedAt())
                 .build();
     }

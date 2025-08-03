@@ -17,5 +17,6 @@ public class PostListResponseDto {
     private String thumbnailUrl;
     private Section section;
     private SubSection subSection;
+    private String username;
     private LocalDateTime updatedAt;
 }
