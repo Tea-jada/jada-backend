@@ -5,6 +5,7 @@ import com.tea.web.common.ResponseMessageDto;
 import com.tea.web.common.ResponseStatus;
 import com.tea.web.users.application.dto.request.AdminSignupRequestDto;
 import com.tea.web.users.application.dto.request.SignupRequestDto;
+import com.tea.web.users.application.dto.request.UpdateUserInfoRequestDto;
 import com.tea.web.users.application.dto.response.UserInfoResponseDto;
 import com.tea.web.users.application.service.UserService;
 import jakarta.validation.Valid;
@@ -70,9 +71,35 @@ public class UserController {
      */
     @GetMapping("/info/{userId}")
     public ResponseDataDto<UserInfoResponseDto> getMyInfo(
-            @PathVariable Long userId,
+            @PathVariable("userId") Long userId,
             @AuthenticationPrincipal UserDetails userDetails) {
         UserInfoResponseDto userInfo = userService.getMyInfo(userId, userDetails);
         return new ResponseDataDto<>(ResponseStatus.GET_USER_SUCCESS, userInfo);
+    }
+
+    /**
+     * 사용자 정보 수정
+     */
+    @PatchMapping("/info/{userId}")
+    public ResponseMessageDto updateUserInfo(
+            @PathVariable("userId") Long userId,
+            @RequestBody UpdateUserInfoRequestDto requestDto,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        userService.updateUserInfo(userId, requestDto, userDetails);
+        return new ResponseMessageDto(ResponseStatus.UPDATE_USER_SUCCESS);
+    }
+
+    /**
+     * 사용자 탈퇴
+     * 
+     * @param userId
+     * @return "탈퇴에 성공했습니다."
+     */
+    @DeleteMapping("/info/{userId}")
+    public ResponseMessageDto deleteUser(
+            @PathVariable("userId") Long userId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        userService.deleteUser(userId, userDetails);
+        return new ResponseMessageDto(ResponseStatus.DELETE_USER_SUCCESS);
     }
 }
