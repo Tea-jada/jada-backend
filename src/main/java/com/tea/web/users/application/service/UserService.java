@@ -35,15 +35,14 @@ public class UserService {
      */
     @Transactional
     public void signup(SignupRequestDto signupRequestDto) {
-        User user = userRepository.findByEmail(signupRequestDto.getEmail())
-                .orElseThrow(() -> new CustomException(ErrorType.DUPLICATE_EMAIL));
-
-        if (user.getIsDeleted()) {
-            throw new CustomException(ErrorType.DELETED_USER);
-        }
-
         if (userRepository.existsByEmail(signupRequestDto.getEmail())) {
-            throw new CustomException(ErrorType.DUPLICATE_EMAIL);
+            User user = userRepository.findByEmail(signupRequestDto.getEmail())
+                    .orElseThrow(() -> new CustomException(ErrorType.DUPLICATE_EMAIL));
+            if (user.getIsDeleted()) {
+                throw new CustomException(ErrorType.DELETED_USER);
+            } else {
+                throw new CustomException(ErrorType.DUPLICATE_EMAIL);
+            }
         }
 
         // 비밀번호 암호화
