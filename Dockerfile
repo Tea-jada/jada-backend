@@ -14,4 +14,8 @@ RUN ./gradlew build -x test --no-daemon
 FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
+
+# ✅ 8080 포트를 외부에 노출
+EXPOSE 8080
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
