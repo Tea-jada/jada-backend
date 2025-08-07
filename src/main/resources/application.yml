@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: culture-tea
+
+  # DB
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA 설정
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  # Redis 설정
+  data:
+    redis:
+      host: localhost
+      port: 6379 # redis 데이터베이스는 기본적으로 6379 포트 사용
+      username: ${REDIS_USER}
+      password: ${REDIS_PASSWORD}
+
+  servlet:
+    multipart:
+      max-file-size: 20MB # 한 개 파일의 최대 크기
+      max-request-size: 20MB # 요청 전체의 최대 크기 (여러 파일 업로드 시)
+
+# server port
+server:
+  port: 8080
+
+service:
+  jwt:
+    access-expiration: 36000000000
+    secret-key: ${JWT_SECRET}
