@@ -25,7 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("1234")
+    @Value("${admin.code}")
     private String adminCode;
 
     /**
