@@ -19,8 +19,8 @@ spring:
   # Redis 설정
   data:
     redis:
-      host: localhost
-      port: 6379 # redis 데이터베이스는 기본적으로 6379 포트 사용
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT} # redis 데이터베이스는 기본적으로 6379 포트 사용
       username: ${REDIS_USER}
       password: ${REDIS_PASSWORD}
 
