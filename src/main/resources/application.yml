@@ -37,3 +37,6 @@ service:
   jwt:
     access-expiration: 36000000000
     secret-key: ${JWT_SECRET}
+
+admin:
+  code: ${ADMIN_CODE}

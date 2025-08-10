@@ -1,11 +1,21 @@
-# 1단계: 빌드
-FROM gradle:8.2.1-jdk17 AS build
-COPY --chown=gradle:gradle . /app
-WORKDIR /app
-RUN gradle build -x test
+# 빌드 단계
+FROM gradle:8.5-jdk17 AS build
 
-# 2단계: 실행
-FROM openjdk:17-jdk-slim
-EXPOSE 8080
+WORKDIR /app
+COPY --chown=gradle:gradle . .
+
+# gradlew 권한 설정
+RUN chmod +x ./gradlew
+
+# 테스트 제외 빌드
+RUN ./gradlew build -x test --no-daemon
+
+# 실행 이미지
+FROM eclipse-temurin:17-jdk-jammy
+WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
+
+# ✅ 8080 포트를 외부에 노출
+EXPOSE 8080
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
