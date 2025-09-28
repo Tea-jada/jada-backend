@@ -174,21 +174,31 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostListResponseDto> getPostsBySubSection(String section, String subSection, Pageable pageable) {
-        Section sec;
-        SubSection sub;
-        try {
-            sec = Section.valueOf(section.toUpperCase()); // 섹션 Enum과 비교하기 위해 대문자로 변환
-        } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorType.SECTION_NOT_FOUND); // 존재하지 않는 섹션을 찾았을 때
-        }
-        try {
-            sub = SubSection.valueOf(subSection.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorType.SUB_SECTION_NOT_FOUND); // 존재하지 않는 서브섹션을 찾았을 때
-        }
+        Category category = categoryRepository.findByCategoryName(section)
+                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
 
-        return postRepository.findBySectionAndSubSectionOrderByUpdatedAtDesc(sec, sub, pageable)
+        SubCategory subCategory = subCategoryRepository.findBySubCategoryName(subSection)
+                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+
+        return postRepository.findByCategoryAndSubCategoryOrderByUpdatedAtDesc(category, subCategory, pageable)
                 .map(this::convertToListResponseDto);
+        // Section sec;
+        // SubSection sub;
+        // try {
+        // sec = Section.valueOf(section.toUpperCase()); // 섹션 Enum과 비교하기 위해 대문자로 변환
+        // } catch (IllegalArgumentException e) {
+        // throw new CustomException(ErrorType.SECTION_NOT_FOUND); // 존재하지 않는 섹션을 찾았을 때
+        // }
+        // try {
+        // sub = SubSection.valueOf(subSection.toUpperCase());
+        // } catch (IllegalArgumentException e) {
+        // throw new CustomException(ErrorType.SUB_SECTION_NOT_FOUND); // 존재하지 않는 서브섹션을
+        // 찾았을 때
+        // }
+
+        // return postRepository.findBySectionAndSubSectionOrderByUpdatedAtDesc(sec,
+        // sub, pageable)
+        // .map(this::convertToListResponseDto);
     }
 
     private PostResponseDto convertToResponseDto(Post post) {
