@@ -41,6 +41,16 @@ public class SubCategoryService {
         subCategoryRepository.save(subCategory);
     }
 
+    public List<SubCategoryResponseDto> getSubCategoriesByCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+
+        List<SubCategory> subCategories = subCategoryRepository.findAllByCategory(category);
+        return subCategories.stream()
+                .map(SubCategoryResponseDto::new)
+                .toList();
+    }
+
     public List<SubCategoryResponseDto> getSubCategories() {
         List<SubCategory> subCategories = subCategoryRepository.findAll();
         return subCategories.stream()

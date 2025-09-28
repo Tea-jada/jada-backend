@@ -45,10 +45,18 @@ public class SubCategoryController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CATEGORY_CREATE_SUCCESS));
     }
 
+    // 카테고리 별 서브카테고리 조회
+    @GetMapping("/category/{categoryId}/subcategories")
+    public ResponseEntity<ResponseDataDto<List<SubCategoryResponseDto>>> getSubCategoriesByCategory(
+            @PathVariable("categoryId") Long categoryId) {
+        List<SubCategoryResponseDto> responseDto = subCategoryService.getSubCategoriesByCategory(categoryId);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.CATEGORY_READ_SUCCESS, responseDto));
+    }
+
     /**
      * 서브 카테고리 조회 (전체 조회)
      */
-    @GetMapping
+    @GetMapping("/subcategories")
     public ResponseEntity<ResponseDataDto<List<SubCategoryResponseDto>>> getSubCategories() {
         List<SubCategoryResponseDto> responseDto = subCategoryService.getSubCategories();
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.CATEGORY_READ_SUCCESS, responseDto));
@@ -57,7 +65,7 @@ public class SubCategoryController {
     /**
      * 서브 카테고리 단일 조회
      */
-    @GetMapping("/{subcategoryId}")
+    @GetMapping("/subcategories/{subcategoryId}")
     public ResponseEntity<ResponseDataDto<SubCategoryResponseDto>> getSubCategory(
             @PathVariable("subcategoryId") Long subcategoryId) {
         SubCategoryResponseDto responseDto = subCategoryService.getSubCategory(subcategoryId);
@@ -67,7 +75,7 @@ public class SubCategoryController {
     /**
      * 서브 카테고리 수정
      */
-    @PutMapping("/{subcategoryId}")
+    @PutMapping("/subcategories/{subcategoryId}")
     public ResponseEntity<ResponseDataDto<SubCategoryResponseDto>> updateSubCategory(
             @PathVariable("subcategoryId") Long subcategoryId,
             @RequestBody SubCategoryRequestDto request,
@@ -79,7 +87,7 @@ public class SubCategoryController {
     /**
      * 서브 카테고리 삭제
      */
-    @DeleteMapping("/{subcategoryId}")
+    @DeleteMapping("/subcategories/{subcategoryId}")
     public ResponseEntity<ResponseMessageDto> deleteSubCategory(
             @PathVariable("subcategoryId") Long subcategoryId,
             @AuthenticationPrincipal UserDetails userDetails) {
