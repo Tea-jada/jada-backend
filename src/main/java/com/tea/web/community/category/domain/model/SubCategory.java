@@ -21,4 +21,17 @@ public class SubCategory extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    public SubCategory(String subCategory) {
+        this.subCategory = subCategory;
+    }
+
+    public void update(String subCategory, String email) {
+        this.subCategory = subCategory;
+        updatedBy(email);
+    }
+
+    public void delete(String email) {
+        softDeletedBy(email);
+    }
 }

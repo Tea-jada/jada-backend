@@ -38,7 +38,7 @@ public class CategoryController {
      * @return 생성된 게시글 정보
      */
     @PostMapping
-    public ResponseEntity<ResponseMessageDto> createPost(@RequestBody CategoryRequestDto request,
+    public ResponseEntity<ResponseMessageDto> createCategory(@RequestBody CategoryRequestDto request,
             @AuthenticationPrincipal UserDetails userDetails) {
         categoryService.createCategory(request, userDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CATEGORY_CREATE_SUCCESS));

@@ -39,7 +39,7 @@ public enum ErrorType {
   NOT_COMMENT_AUTHOR(HttpStatus.FORBIDDEN, "본인이 작성한 댓글만 접근할 수 있습니다."),
 
   IMAGE_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다."),
-  NOT_ADMIN(HttpStatus.FORBIDDEN, "어드민이 아닙니다.");
+  NOT_ADMIN(HttpStatus.FORBIDDEN, "어드민이 아닙니다."),;
 
   private final HttpStatus httpStatus;
   private final String message;
