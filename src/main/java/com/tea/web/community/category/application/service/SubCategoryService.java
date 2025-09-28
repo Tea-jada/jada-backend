@@ -30,7 +30,7 @@ public class SubCategoryService {
     public void createSubCategory(SubCategoryRequestDto request, UserDetails userDetails) {
         checkNotAdmin(userDetails);
 
-        SubCategory subCategory = new SubCategory(request.getSubCategory());
+        SubCategory subCategory = new SubCategory(request.getSubCategoryName());
 
         subCategoryRepository.save(subCategory);
     }
@@ -55,7 +55,7 @@ public class SubCategoryService {
 
         SubCategory subCategory = findSubCategory(subCategoryId);
 
-        subCategory.update(request.getSubCategory(), user.getEmail());
+        subCategory.update(request.getSubCategoryName(), user.getEmail());
         return new SubCategoryResponseDto(subCategory);
     }
 

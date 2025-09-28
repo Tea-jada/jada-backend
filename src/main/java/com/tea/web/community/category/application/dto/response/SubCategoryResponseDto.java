@@ -6,9 +6,9 @@ import lombok.Getter;
 
 @Getter
 public class SubCategoryResponseDto {
-    private String subCategory;
+    private String subCategoryName;
 
     public SubCategoryResponseDto(SubCategory subCategory) {
-        this.subCategory = subCategory.getSubCategory();
+        this.subCategoryName = subCategory.getSubCategoryName();
     }
 }

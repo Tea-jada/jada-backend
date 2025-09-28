@@ -1,6 +1,6 @@
 package com.tea.web.community.post.domain.repository;
 
-import com.tea.web.community.post.domain.model.Category;
+import com.tea.web.community.category.domain.model.Category;
 import com.tea.web.community.post.domain.model.Post;
 import com.tea.web.community.post.domain.model.Section;
 import com.tea.web.community.post.domain.model.SubSection;

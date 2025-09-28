@@ -117,21 +117,24 @@ public class PostController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_SEARCH_SUCCESS, responseDtos));
     }
 
-    /**
-     * 카테고리별 게시글 목록 조회 (페이징)
-     *
-     * @param category 카테고리명 (예: notice, article, board)
-     * @param pageable 페이징 정보
-     * @return 페이징된 게시글 목록
-     * @example /api/v1/posts/category/notice?page=0&size=10
-     */
-    @GetMapping("/category/{category}")
-    public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getPostsByCategory(
-            @PathVariable("category") String category,
-            Pageable pageable) {
-        Page<PostListResponseDto> responseDtos = postService.getPostsByCategory(category, pageable);
-        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
-    }
+    // /**
+    // * 카테고리별 게시글 목록 조회 (페이징)
+    // *
+    // * @param category 카테고리명 (예: notice, article, board)
+    // * @param pageable 페이징 정보
+    // * @return 페이징된 게시글 목록
+    // * @example /api/v1/posts/category/notice?page=0&size=10
+    // */
+    // @GetMapping("/category/{category}")
+    // public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>>
+    // getPostsByCategory(
+    // @PathVariable("category") String category,
+    // Pageable pageable) {
+    // Page<PostListResponseDto> responseDtos =
+    // postService.getPostsByCategory(category, pageable);
+    // return ResponseEntity.ok(new
+    // ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
+    // }
 
     /**
      * 섹션별 게시글 목록 조회 (페이징)

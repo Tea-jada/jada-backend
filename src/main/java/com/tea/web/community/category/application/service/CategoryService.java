@@ -30,7 +30,7 @@ public class CategoryService {
     public void createCategory(CategoryRequestDto request, UserDetails userDetails) {
         checkNotAdmin(userDetails);
 
-        Category category = new Category(request.getCategory());
+        Category category = new Category(request.getCategoryName());
 
         categoryRepository.save(category);
     }
@@ -54,7 +54,7 @@ public class CategoryService {
 
         Category category = findCategory(categoryId);
 
-        category.update(request.getCategory(), user.getEmail());
+        category.update(request.getCategoryName(), user.getEmail());
         return new CategoryResponseDto(category);
     }
 

@@ -85,4 +85,5 @@ public class CategoryController {
         categoryService.deleteCategory(categoryId, userDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CATEGORY_DELETED_SUCCESS));
     }
+
 }

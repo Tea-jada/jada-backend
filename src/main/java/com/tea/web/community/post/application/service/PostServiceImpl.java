@@ -5,6 +5,9 @@ import com.cloudinary.utils.ObjectUtils;
 import com.tea.web.common.CustomException;
 import com.tea.web.common.ErrorType;
 import com.tea.web.community.category.domain.model.Category;
+import com.tea.web.community.category.domain.model.SubCategory;
+import com.tea.web.community.category.domain.repository.CategoryRepository;
+import com.tea.web.community.category.domain.repository.SubCategoryRepository;
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
@@ -38,6 +41,8 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final Cloudinary cloudinary;
+    private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
 
     /**
      * 게시글 생성
@@ -54,11 +59,15 @@ public class PostServiceImpl implements PostService {
 
         // // ARTICLE(기사)와 NOTICE(공지사항)은 ADMIN만 작성가능
         // if (request.getCategory() == Category.ARTICLE ||
-        //         request.getCategory() == Category.NOTICE) {
-        //     if (user.getRole() != Role.ADMIN) {
-        //         throw new CustomException(ErrorType.ADMIN_ONLY_POST);
-        //     }
+        // request.getCategory() == Category.NOTICE) {
+        // if (user.getRole() != Role.ADMIN) {
+        // throw new CustomException(ErrorType.ADMIN_ONLY_POST);
         // }
+        // }
+        Category category = categoryRepository.findByCategoryName(request.getCategory())
+                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+        SubCategory subCategory = subCategoryRepository.findBySubCategoryName(request.getSubCategory())
+                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
 
         Post post = Post.builder()
                 .user(user)
@@ -67,11 +76,13 @@ public class PostServiceImpl implements PostService {
                 .content(request.getContent())
                 // .category(request.getCategory())
                 .thumbnailUrl(request.getThumbnailUrl())
-                .img1l(request.getImg1l())
-                .img2l(request.getImg2l())
-                .img3l(request.getImg3l())
-                .section(request.getSection())
-                .subSection(request.getSubSection())
+                .category(category)
+                .subCategory(subCategory)
+                // .img1l(request.getImg1l())
+                // .img2l(request.getImg2l())
+                // .img3l(request.getImg3l())
+                // .section(request.getSection())
+                // .subSection(request.getSubSection())
                 .build();
 
         postRepository.save(post);
@@ -108,6 +119,9 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void deletePost(Long postId, UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
 
@@ -116,7 +130,9 @@ public class PostServiceImpl implements PostService {
             throw new CustomException(ErrorType.FORBIDDEN);
         }
 
-        postRepository.deleteById(postId);
+        // postRepository.deleteById(postId);
+        post.delete(user.getEmail());
+        postRepository.save(post);
     }
 
     @Override
@@ -125,28 +141,35 @@ public class PostServiceImpl implements PostService {
                 .map(this::convertToListResponseDto);
     }
 
-    @Override
-    public Page<PostListResponseDto> getPostsByCategory(String category, Pageable pageable) {
-        Category cat;
-        try {
-            cat = Category.valueOf(category.toUpperCase()); // 카테고리 Enum과 비교하기 위해 대문자로 변환
-        } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorType.CATEGORY_NOT_FOUND); // 존재하지 않는 카테고리를 찾았을 때
-        }
-        return postRepository.findByCategoryOrderByUpdatedAtDesc(cat, pageable)
-                .map(this::convertToListResponseDto);
-    }
+    // @Override
+    // public Page<PostListResponseDto> getPostsByCategory(String category, Pageable
+    // pageable) {
+    // Category cat;
+    // try {
+    // cat = Category.valueOf(category.toUpperCase()); // 카테고리 Enum과 비교하기 위해 대문자로 변환
+    // } catch (IllegalArgumentException e) {
+    // throw new CustomException(ErrorType.CATEGORY_NOT_FOUND); // 존재하지 않는 카테고리를 찾았을
+    // 때
+    // }
+    // return postRepository.findByCategoryOrderByUpdatedAtDesc(cat, pageable)
+    // .map(this::convertToListResponseDto);
+    // }
 
     @Override
     public Page<PostListResponseDto> getPostsBySection(String section, Pageable pageable) {
-        Section sec;
-        try {
-            sec = Section.valueOf(section.toUpperCase()); // 섹션 Enum과 비교하기 위해 대문자로 변환
-        } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorType.SECTION_NOT_FOUND); // 존재하지 않는 섹션을 찾았을 때
-        }
-        return postRepository.findBySectionOrderByUpdatedAtDesc(sec, pageable)
+        Category category = categoryRepository.findByCategoryName(section)
+                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+
+        return postRepository.findByCategoryOrderByUpdatedAtDesc(category, pageable)
                 .map(this::convertToListResponseDto);
+        // Section sec;
+        // try {
+        // sec = Section.valueOf(section.toUpperCase()); // 섹션 Enum과 비교하기 위해 대문자로 변환
+        // } catch (IllegalArgumentException e) {
+        // throw new CustomException(ErrorType.SECTION_NOT_FOUND); // 존재하지 않는 섹션을 찾았을 때
+        // }
+        // return postRepository.findBySectionOrderByUpdatedAtDesc(sec, pageable)
+        // .map(this::convertToListResponseDto);
     }
 
     @Override
@@ -176,8 +199,10 @@ public class PostServiceImpl implements PostService {
                 .type(post.getType())
                 // .category(post.getCategory())
                 .thumbnailUrl(post.getThumbnailUrl())
-                .section(post.getSection())
-                .subSection(post.getSubSection())
+                // .section(post.getSection())
+                // .subSection(post.getSubSection())
+                .category(post.getCategory().getCategoryName())
+                .subCategory(post.getSubCategory().getSubCategoryName())
                 .email(post.getUser().getEmail())
                 .username(post.getUser().getUsername())
                 .createdAt(post.getCreatedAt())
@@ -191,8 +216,10 @@ public class PostServiceImpl implements PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .thumbnailUrl(post.getThumbnailUrl())
-                .section(post.getSection())
-                .subSection(post.getSubSection())
+                // .section(post.getSection())
+                // .subSection(post.getSubSection())
+                .category(post.getCategory().getCategoryName())
+                .subCategory(post.getSubCategory().getSubCategoryName())
                 .username(post.getUser().getUsername())
                 .updatedAt(post.getUpdatedAt())
                 .build();

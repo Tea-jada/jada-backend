@@ -1,6 +1,11 @@
 package com.tea.web.community.category.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.tea.web.common.BaseEntity;
+import com.tea.web.community.post.domain.model.Post;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,18 +21,21 @@ public class SubCategory extends BaseEntity {
     private Long id;
 
     @Column(length = 50, nullable = false)
-    private String subCategory;
+    private String subCategoryName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    public SubCategory(String subCategory) {
-        this.subCategory = subCategory;
+    @OneToMany(mappedBy = "subCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+    public SubCategory(String subCategoryName) {
+        this.subCategoryName = subCategoryName;
     }
 
-    public void update(String subCategory, String email) {
-        this.subCategory = subCategory;
+    public void update(String subCategoryName, String email) {
+        this.subCategoryName = subCategoryName;
         updatedBy(email);
     }
 
