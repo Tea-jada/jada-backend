@@ -3,11 +3,6 @@ package com.tea.web.community.post.domain.repository;
 import com.tea.web.community.category.domain.model.Category;
 import com.tea.web.community.category.domain.model.SubCategory;
 import com.tea.web.community.post.domain.model.Post;
-import com.tea.web.community.post.domain.model.Section;
-import com.tea.web.community.post.domain.model.SubSection;
-import com.tea.web.users.domain.model.User;
-
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -24,7 +24,7 @@ import com.tea.web.community.category.application.service.SubCategoryService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class SubCategoryController {
 
@@ -37,10 +37,11 @@ public class SubCategoryController {
      * @param userDetails 현재 인증된 사용자 정보
      * @return 생성된 게시글 정보
      */
-    @PostMapping
+    @PostMapping("/category/{categoryId}/subcategories")
     public ResponseEntity<ResponseMessageDto> createSubCategory(@RequestBody SubCategoryRequestDto request,
+            @PathVariable("categoryId") Long categoryId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        subCategoryService.createSubCategory(request, userDetails);
+        subCategoryService.createSubCategory(request, categoryId, userDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CATEGORY_CREATE_SUCCESS));
     }
 

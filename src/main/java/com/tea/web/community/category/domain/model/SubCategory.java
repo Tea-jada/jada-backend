@@ -30,8 +30,9 @@ public class SubCategory extends BaseEntity {
     @OneToMany(mappedBy = "subCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
-    public SubCategory(String subCategoryName) {
+    public SubCategory(String subCategoryName, Category category) {
         this.subCategoryName = subCategoryName;
+        this.category = category;
     }
 
     public void update(String subCategoryName, String email) {

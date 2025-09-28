@@ -10,7 +10,9 @@ import com.tea.web.common.CustomException;
 import com.tea.web.common.ErrorType;
 import com.tea.web.community.category.application.dto.request.SubCategoryRequestDto;
 import com.tea.web.community.category.application.dto.response.SubCategoryResponseDto;
+import com.tea.web.community.category.domain.model.Category;
 import com.tea.web.community.category.domain.model.SubCategory;
+import com.tea.web.community.category.domain.repository.CategoryRepository;
 import com.tea.web.community.category.domain.repository.SubCategoryRepository;
 import com.tea.web.users.domain.model.Role;
 import com.tea.web.users.domain.model.User;
@@ -23,14 +25,18 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class SubCategoryService {
 
+    private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public void createSubCategory(SubCategoryRequestDto request, UserDetails userDetails) {
+    public void createSubCategory(SubCategoryRequestDto request, Long categoryId, UserDetails userDetails) {
         checkNotAdmin(userDetails);
 
-        SubCategory subCategory = new SubCategory(request.getSubCategoryName());
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+
+        SubCategory subCategory = new SubCategory(request.getSubCategoryName(), category);
 
         subCategoryRepository.save(subCategory);
     }
