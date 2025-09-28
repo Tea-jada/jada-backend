@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tea.web.common.CustomException;
 import com.tea.web.common.ErrorType;
-import com.tea.web.community.category.application.dto.request.CategoryCreateRequestDto;
+import com.tea.web.community.category.application.dto.request.CategoryRequestDto;
 import com.tea.web.community.category.application.dto.response.CategoryResponseDto;
 import com.tea.web.community.category.domain.model.Category;
 import com.tea.web.community.category.domain.repository.CategoryRepository;
@@ -27,7 +27,7 @@ public class CategoryService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void createCategory(CategoryCreateRequestDto request, UserDetails userDetails) {
+    public void createCategory(CategoryRequestDto request, UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
 
@@ -49,6 +49,21 @@ public class CategoryService {
     public CategoryResponseDto getCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+        return new CategoryResponseDto(category);
+    }
+
+    @Transactional
+    public CategoryResponseDto updateCategory(Long categoryId, CategoryRequestDto request, UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+
+        if (!user.getRole().equals(Role.ADMIN))
+            throw new CustomException(ErrorType.NOT_ADMIN);
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+
+        category.update(request.getCategory());
         return new CategoryResponseDto(category);
     }
 }

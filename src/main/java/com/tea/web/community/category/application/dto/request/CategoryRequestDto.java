@@ -3,6 +3,6 @@ package com.tea.web.community.category.application.dto.request;
 import lombok.Getter;
 
 @Getter
-public class CategoryCreateRequestDto {
+public class CategoryRequestDto {
     private String category;
 }

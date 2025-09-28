@@ -51,4 +51,8 @@ public class Category extends BaseEntity {
     public Category(String category) {
         this.category = category;
     }
+
+    public void update(String category) {
+        this.category = category;
+    }
 }
