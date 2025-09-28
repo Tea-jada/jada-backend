@@ -24,7 +24,8 @@ public interface PostService {
 
     void deletePost(Long postId, UserDetails userDetails);
 
-    Page<PostListResponseDto> getPostsByCategory(String category, Pageable pageable);
+    // Page<PostListResponseDto> getPostsByCategory(String category, Pageable
+    // pageable);
 
     Page<PostListResponseDto> getPostsBySection(String section, Pageable pageable);
 
