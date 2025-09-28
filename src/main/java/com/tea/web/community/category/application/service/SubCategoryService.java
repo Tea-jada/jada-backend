@@ -1,4 +1,4 @@
-package com.tea.web.community.subCategory.application.service;
+package com.tea.web.community.category.application.service;
 
 import java.util.List;
 
