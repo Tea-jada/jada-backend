@@ -52,7 +52,12 @@ public class Category extends BaseEntity {
         this.category = category;
     }
 
-    public void update(String category) {
+    public void update(String category, String email) {
         this.category = category;
+        updatedBy(email);
+    }
+
+    public void delete(String email) {
+        softDeletedBy(email);
     }
 }

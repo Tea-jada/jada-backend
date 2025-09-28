@@ -1,8 +1,9 @@
 package com.tea.web.common;
 
+import org.springframework.http.HttpStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
@@ -30,6 +31,7 @@ public enum ResponseStatus {
   CATEGORY_CREATE_SUCCESS(HttpStatus.OK, "카테고리 생성에 성공했습니다."),
   CATEGORY_READ_SUCCESS(HttpStatus.OK, "카테고리 조회에 성공했습니다."),
   CATEGORY_UPDATE_SUCCESS(HttpStatus.OK, "카테고리 수정에 송공헀습니다."),
+  CATEGORY_DELETED_SUCCESS(HttpStatus.OK, "카테고리 삭제에 성공했습니다."),
 
   ;
 

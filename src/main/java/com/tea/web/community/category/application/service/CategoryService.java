@@ -28,11 +28,7 @@ public class CategoryService {
 
     @Transactional
     public void createCategory(CategoryRequestDto request, UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
-
-        if (!user.getRole().equals(Role.ADMIN))
-            throw new CustomException(ErrorType.NOT_ADMIN);
+        checkNotAdmin(userDetails);
 
         Category category = new Category(request.getCategory());
 
@@ -47,23 +43,43 @@ public class CategoryService {
     }
 
     public CategoryResponseDto getCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+        Category category = findCategory(categoryId);
+
         return new CategoryResponseDto(category);
     }
 
     @Transactional
     public CategoryResponseDto updateCategory(Long categoryId, CategoryRequestDto request, UserDetails userDetails) {
+        User user = checkNotAdmin(userDetails);
+
+        Category category = findCategory(categoryId);
+
+        category.update(request.getCategory(), user.getEmail());
+        return new CategoryResponseDto(category);
+    }
+
+    @Transactional
+    public void deleteCategory(Long categoryId, UserDetails userDetails) {
+        User user = checkNotAdmin(userDetails);
+
+        Category category = findCategory(categoryId);
+
+        category.delete(user.getEmail());
+        categoryRepository.save(category);
+    }
+
+    private User checkNotAdmin(UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
 
         if (!user.getRole().equals(Role.ADMIN))
             throw new CustomException(ErrorType.NOT_ADMIN);
 
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+        return user;
+    }
 
-        category.update(request.getCategory());
-        return new CategoryResponseDto(category);
+    private Category findCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
     }
 }
