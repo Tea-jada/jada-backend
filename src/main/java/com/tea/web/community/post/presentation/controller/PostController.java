@@ -3,6 +3,7 @@ package com.tea.web.community.post.presentation.controller;
 import com.tea.web.common.ResponseDataDto;
 import com.tea.web.common.ResponseMessageDto;
 import com.tea.web.common.ResponseStatus;
+import com.tea.web.community.post.application.dto.request.ByCategoryRequestDto;
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
 import com.tea.web.community.post.application.dto.response.ImageResponseDto;
@@ -143,11 +144,12 @@ public class PostController {
      * @param pageable
      * @return
      */
-    @GetMapping("/section/{section}")
+    @GetMapping("/section")
     public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getPostsBySection(
-            @PathVariable("section") String section,
+            // @PathVariable("section") String section,
+            @RequestBody ByCategoryRequestDto request,
             Pageable pageable) {
-        Page<PostListResponseDto> responseDtos = postService.getPostsBySection(section, pageable);
+        Page<PostListResponseDto> responseDtos = postService.getPostsBySection(request.getCategory(), pageable);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
     }
 
@@ -158,12 +160,14 @@ public class PostController {
      * @param pageable
      * @return
      */
-    @GetMapping("/section/{section}/sub-section/{subSection}")
+    @GetMapping("/sub-section")
     public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getPostsBySubSection(
-            @PathVariable("section") String section,
-            @PathVariable("subSection") String subSection,
+            // @PathVariable("section") String section,
+            // @PathVariable("subSection") String subSection,
+            @RequestBody ByCategoryRequestDto request,
             Pageable pageable) {
-        Page<PostListResponseDto> responseDtos = postService.getPostsBySubSection(section, subSection, pageable);
+        Page<PostListResponseDto> responseDtos = postService.getPostsBySubSection(request.getCategory(),
+                request.getSubCategory(), pageable);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
     }
 
