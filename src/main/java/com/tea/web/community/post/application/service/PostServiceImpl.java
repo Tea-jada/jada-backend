@@ -4,17 +4,17 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.tea.web.common.CustomException;
 import com.tea.web.common.ErrorType;
+import com.tea.web.community.category.domain.model.Category;
+import com.tea.web.community.category.domain.model.SubCategory;
+import com.tea.web.community.category.domain.repository.CategoryRepository;
+import com.tea.web.community.category.domain.repository.SubCategoryRepository;
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
 import com.tea.web.community.post.application.dto.response.ImageResponseDto;
 import com.tea.web.community.post.application.dto.response.PostListResponseDto;
-import com.tea.web.community.post.domain.model.Category;
 import com.tea.web.community.post.domain.model.Post;
-import com.tea.web.community.post.domain.model.Section;
-import com.tea.web.community.post.domain.model.SubSection;
 import com.tea.web.community.post.domain.repository.PostRepository;
-import com.tea.web.users.domain.model.Role;
 import com.tea.web.users.domain.model.User;
 import com.tea.web.users.domain.repository.UserRepository;
 
@@ -35,181 +35,215 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 public class PostServiceImpl implements PostService {
 
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
-    private final Cloudinary cloudinary;
+        private final PostRepository postRepository;
+        private final UserRepository userRepository;
+        private final Cloudinary cloudinary;
+        private final CategoryRepository categoryRepository;
+        private final SubCategoryRepository subCategoryRepository;
 
-    /**
-     * 게시글 생성
-     * 
-     * @param request
-     * @param userDetails
-     * @return
-     */
-    @Override
-    @Transactional
-    public void createPost(PostCreateRequestDto request, UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+        /**
+         * 게시글 생성
+         * 
+         * @param request
+         * @param userDetails
+         * @return
+         */
+        @Override
+        @Transactional
+        public void createPost(PostCreateRequestDto request, UserDetails userDetails) {
+                User user = userRepository.findByEmail(userDetails.getUsername())
+                                .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
 
-        // ARTICLE(기사)와 NOTICE(공지사항)은 ADMIN만 작성가능
-        if (request.getCategory() == Category.ARTICLE ||
-                request.getCategory() == Category.NOTICE) {
-            if (user.getRole() != Role.ADMIN) {
-                throw new CustomException(ErrorType.ADMIN_ONLY_POST);
-            }
+                // // ARTICLE(기사)와 NOTICE(공지사항)은 ADMIN만 작성가능
+                // if (request.getCategory() == Category.ARTICLE ||
+                // request.getCategory() == Category.NOTICE) {
+                // if (user.getRole() != Role.ADMIN) {
+                // throw new CustomException(ErrorType.ADMIN_ONLY_POST);
+                // }
+                // }
+                Category category = categoryRepository.findByCategoryName(request.getCategory())
+                                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+                SubCategory subCategory = subCategoryRepository.findBySubCategoryName(request.getSubCategory())
+                                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+
+                Post post = Post.builder()
+                                .user(user)
+                                .type(request.getType())
+                                .title(request.getTitle())
+                                .content(request.getContent())
+                                // .category(request.getCategory())
+                                .thumbnailUrl(request.getThumbnailUrl())
+                                .category(category)
+                                .subCategory(subCategory)
+                                // .img1l(request.getImg1l())
+                                // .img2l(request.getImg2l())
+                                // .img3l(request.getImg3l())
+                                // .section(request.getSection())
+                                // .subSection(request.getSubSection())
+                                .build();
+
+                postRepository.save(post);
         }
 
-        Post post = Post.builder()
-                .user(user)
-                .type(request.getType())
-                .title(request.getTitle())
-                .content(request.getContent())
-                .category(request.getCategory())
-                .thumbnailUrl(request.getThumbnailUrl())
-                .img1l(request.getImg1l())
-                .img2l(request.getImg2l())
-                .img3l(request.getImg3l())
-                .section(request.getSection())
-                .subSection(request.getSubSection())
-                .build();
-
-        postRepository.save(post);
-    }
-
-    @Override
-    public PostResponseDto getPost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
-        return convertToResponseDto(post);
-    }
-
-    @Override
-    public Page<PostListResponseDto> getAllPosts(Pageable pageable) {
-        return postRepository.findAll(pageable)
-                .map(this::convertToListResponseDto);
-    }
-
-    @Override
-    @Transactional
-    public PostResponseDto updatePost(Long postId, PostUpdateRequestDto request, UserDetails userDetails) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
-
-        // 게시글 작성자 확인
-        if (!post.getUser().getEmail().equals(userDetails.getUsername())) {
-            throw new CustomException(ErrorType.FORBIDDEN);
+        @Override
+        public PostResponseDto getPost(Long postId) {
+                Post post = postRepository.findById(postId)
+                                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
+                return convertToResponseDto(post);
         }
 
-        post.update(request.getTitle(), request.getContent());
-        return convertToResponseDto(post);
-    }
-
-    @Override
-    @Transactional
-    public void deletePost(Long postId, UserDetails userDetails) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
-
-        // 게시글 작성자 확인
-        if (!post.getUser().getEmail().equals(userDetails.getUsername())) {
-            throw new CustomException(ErrorType.FORBIDDEN);
+        @Override
+        public Page<PostListResponseDto> getAllPosts(Pageable pageable) {
+                return postRepository.findAll(pageable)
+                                .map(this::convertToListResponseDto);
         }
 
-        postRepository.deleteById(postId);
-    }
+        @Override
+        @Transactional
+        public PostResponseDto updatePost(Long postId, PostUpdateRequestDto request, UserDetails userDetails) {
+                Post post = postRepository.findById(postId)
+                                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
 
-    @Override
-    public Page<PostListResponseDto> searchPosts(String keyword, Pageable pageable) {
-        return postRepository.searchByTitleOrUsername(keyword, pageable)
-                .map(this::convertToListResponseDto);
-    }
+                // 게시글 작성자 확인
+                if (!post.getUser().getEmail().equals(userDetails.getUsername())) {
+                        throw new CustomException(ErrorType.FORBIDDEN);
+                }
 
-    @Override
-    public Page<PostListResponseDto> getPostsByCategory(String category, Pageable pageable) {
-        Category cat;
-        try {
-            cat = Category.valueOf(category.toUpperCase()); // 카테고리 Enum과 비교하기 위해 대문자로 변환
-        } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorType.CATEGORY_NOT_FOUND); // 존재하지 않는 카테고리를 찾았을 때
-        }
-        return postRepository.findByCategoryOrderByUpdatedAtDesc(cat, pageable)
-                .map(this::convertToListResponseDto);
-    }
-
-    @Override
-    public Page<PostListResponseDto> getPostsBySection(String section, Pageable pageable) {
-        Section sec;
-        try {
-            sec = Section.valueOf(section.toUpperCase()); // 섹션 Enum과 비교하기 위해 대문자로 변환
-        } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorType.SECTION_NOT_FOUND); // 존재하지 않는 섹션을 찾았을 때
-        }
-        return postRepository.findBySectionOrderByUpdatedAtDesc(sec, pageable)
-                .map(this::convertToListResponseDto);
-    }
-
-    @Override
-    public Page<PostListResponseDto> getPostsBySubSection(String section, String subSection, Pageable pageable) {
-        Section sec;
-        SubSection sub;
-        try {
-            sec = Section.valueOf(section.toUpperCase()); // 섹션 Enum과 비교하기 위해 대문자로 변환
-        } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorType.SECTION_NOT_FOUND); // 존재하지 않는 섹션을 찾았을 때
-        }
-        try {
-            sub = SubSection.valueOf(subSection.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new CustomException(ErrorType.SUB_SECTION_NOT_FOUND); // 존재하지 않는 서브섹션을 찾았을 때
+                post.update(request.getTitle(), request.getContent());
+                return convertToResponseDto(post);
         }
 
-        return postRepository.findBySectionAndSubSectionOrderByUpdatedAtDesc(sec, sub, pageable)
-                .map(this::convertToListResponseDto);
-    }
+        @Override
+        @Transactional
+        public void deletePost(Long postId, UserDetails userDetails) {
+                User user = userRepository.findByEmail(userDetails.getUsername())
+                                .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
 
-    private PostResponseDto convertToResponseDto(Post post) {
-        return PostResponseDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .type(post.getType())
-                .category(post.getCategory())
-                .thumbnailUrl(post.getThumbnailUrl())
-                .section(post.getSection())
-                .subSection(post.getSubSection())
-                .email(post.getUser().getEmail())
-                .username(post.getUser().getUsername())
-                .createdAt(post.getCreatedAt())
-                .updatedAt(post.getUpdatedAt())
-                .build();
-    }
+                Post post = postRepository.findById(postId)
+                                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
 
-    private PostListResponseDto convertToListResponseDto(Post post) {
-        return PostListResponseDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .thumbnailUrl(post.getThumbnailUrl())
-                .section(post.getSection())
-                .subSection(post.getSubSection())
-                .username(post.getUser().getUsername())
-                .updatedAt(post.getUpdatedAt())
-                .build();
-    }
+                // 게시글 작성자 확인
+                if (!post.getUser().getEmail().equals(userDetails.getUsername())) {
+                        throw new CustomException(ErrorType.FORBIDDEN);
+                }
 
-    @Override
-    public ImageResponseDto uploadImage(MultipartFile file) {
-        try {
-            // 파일을 Cloudinary에 업로드하고 결과를 Map으로 받음
-            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-
-            // 업로드된 이미지의 URL을 반환
-            String imgUrl = uploadResult.get("secure_url").toString();
-
-            return ImageResponseDto.builder().imgUrl(imgUrl).build();
-        } catch (IOException e) {
-            throw new CustomException(ErrorType.IMAGE_UPLOAD_FAIL);
+                // postRepository.deleteById(postId);
+                post.delete(user.getEmail());
+                postRepository.save(post);
         }
-    }
+
+        @Override
+        public Page<PostListResponseDto> searchPosts(String keyword, Pageable pageable) {
+                return postRepository.searchByTitleOrUsername(keyword, pageable)
+                                .map(this::convertToListResponseDto);
+        }
+
+        // @Override
+        // public Page<PostListResponseDto> getPostsByCategory(String category, Pageable
+        // pageable) {
+        // Category cat;
+        // try {
+        // cat = Category.valueOf(category.toUpperCase()); // 카테고리 Enum과 비교하기 위해 대문자로 변환
+        // } catch (IllegalArgumentException e) {
+        // throw new CustomException(ErrorType.CATEGORY_NOT_FOUND); // 존재하지 않는 카테고리를 찾았을
+        // 때
+        // }
+        // return postRepository.findByCategoryOrderByUpdatedAtDesc(cat, pageable)
+        // .map(this::convertToListResponseDto);
+        // }
+
+        @Override
+        public Page<PostListResponseDto> getPostsBySection(String section, Pageable pageable) {
+                Category category = categoryRepository.findByCategoryName(section)
+                                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+
+                return postRepository.findByCategoryOrderByUpdatedAtDesc(category, pageable)
+                                .map(this::convertToListResponseDto);
+                // Section sec;
+                // try {
+                // sec = Section.valueOf(section.toUpperCase()); // 섹션 Enum과 비교하기 위해 대문자로 변환
+                // } catch (IllegalArgumentException e) {
+                // throw new CustomException(ErrorType.SECTION_NOT_FOUND); // 존재하지 않는 섹션을 찾았을 때
+                // }
+                // return postRepository.findBySectionOrderByUpdatedAtDesc(sec, pageable)
+                // .map(this::convertToListResponseDto);
+        }
+
+        @Override
+        public Page<PostListResponseDto> getPostsBySubSection(String section, String subSection, Pageable pageable) {
+                Category category = categoryRepository.findByCategoryName(section)
+                                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+
+                SubCategory subCategory = subCategoryRepository.findBySubCategoryName(subSection)
+                                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+
+                return postRepository.findByCategoryAndSubCategoryOrderByUpdatedAtDesc(category, subCategory, pageable)
+                                .map(this::convertToListResponseDto);
+                // Section sec;
+                // SubSection sub;
+                // try {
+                // sec = Section.valueOf(section.toUpperCase()); // 섹션 Enum과 비교하기 위해 대문자로 변환
+                // } catch (IllegalArgumentException e) {
+                // throw new CustomException(ErrorType.SECTION_NOT_FOUND); // 존재하지 않는 섹션을 찾았을 때
+                // }
+                // try {
+                // sub = SubSection.valueOf(subSection.toUpperCase());
+                // } catch (IllegalArgumentException e) {
+                // throw new CustomException(ErrorType.SUB_SECTION_NOT_FOUND); // 존재하지 않는 서브섹션을
+                // 찾았을 때
+                // }
+
+                // return postRepository.findBySectionAndSubSectionOrderByUpdatedAtDesc(sec,
+                // sub, pageable)
+                // .map(this::convertToListResponseDto);
+        }
+
+        private PostResponseDto convertToResponseDto(Post post) {
+                return PostResponseDto.builder()
+                                .id(post.getId())
+                                .title(post.getTitle())
+                                .content(post.getContent())
+                                .type(post.getType())
+                                // .category(post.getCategory())
+                                .thumbnailUrl(post.getThumbnailUrl())
+                                // .section(post.getSection())
+                                // .subSection(post.getSubSection())
+                                .category(post.getCategory().getCategoryName())
+                                .subCategory(post.getSubCategory().getSubCategoryName())
+                                .email(post.getUser().getEmail())
+                                .username(post.getUser().getUsername())
+                                .createdAt(post.getCreatedAt())
+                                .updatedAt(post.getUpdatedAt())
+                                .build();
+        }
+
+        private PostListResponseDto convertToListResponseDto(Post post) {
+                return PostListResponseDto.builder()
+                                .id(post.getId())
+                                .title(post.getTitle())
+                                .content(post.getContent())
+                                .thumbnailUrl(post.getThumbnailUrl())
+                                // .section(post.getSection())
+                                // .subSection(post.getSubSection())
+                                .category(post.getCategory().getCategoryName())
+                                .subCategory(post.getSubCategory().getSubCategoryName())
+                                .username(post.getUser().getUsername())
+                                .updatedAt(post.getUpdatedAt())
+                                .build();
+        }
+
+        @Override
+        public ImageResponseDto uploadImage(MultipartFile file) {
+                try {
+                        // 파일을 Cloudinary에 업로드하고 결과를 Map으로 받음
+                        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+
+                        // 업로드된 이미지의 URL을 반환
+                        String imgUrl = uploadResult.get("secure_url").toString();
+
+                        return ImageResponseDto.builder().imgUrl(imgUrl).build();
+                } catch (IOException e) {
+                        throw new CustomException(ErrorType.IMAGE_UPLOAD_FAIL);
+                }
+        }
 }

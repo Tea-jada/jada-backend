@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tea.web.common.BaseEntity;
+import com.tea.web.community.post.domain.model.Post;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,7 +14,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -44,12 +44,24 @@ public class Category extends BaseEntity {
     private Long id;
 
     @Column(length = 50, nullable = false)
-    private String category;
+    private String categoryName;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubCategory> subCategories = new ArrayList<>();
 
-    public Category(String category) {
-        this.category = category;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+    public Category(String categoryname) {
+        this.categoryName = categoryname;
+    }
+
+    public void update(String categoryname, String email) {
+        this.categoryName = categoryname;
+        updatedBy(email);
+    }
+
+    public void delete(String email) {
+        softDeletedBy(email);
     }
 }

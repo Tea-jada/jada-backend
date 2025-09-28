@@ -5,9 +5,6 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-import com.tea.web.community.post.domain.model.Section;
-import com.tea.web.community.post.domain.model.SubSection;
-
 @Getter
 @Builder
 public class PostListResponseDto {
@@ -15,8 +12,10 @@ public class PostListResponseDto {
     private String title;
     private String content;
     private String thumbnailUrl;
-    private Section section;
-    private SubSection subSection;
+    // private Section section;
+    // private SubSection subSection;
+    private String category;
+    private String subCategory;
     private String username;
     private LocalDateTime updatedAt;
 }
