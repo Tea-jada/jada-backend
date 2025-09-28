@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +54,12 @@ public class CategoryController {
     /**
      * 카테고리 단일 조회
      */
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<ResponseDataDto<CategoryResponseDto>> getCategory(
+            @PathVariable("categoryId") Long categoryId) {
+        CategoryResponseDto responseDto = categoryService.getCategory(categoryId);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.CATEGORY_READ_SUCCESS, responseDto));
+    }
 
     /**
      * 카테고리 수정

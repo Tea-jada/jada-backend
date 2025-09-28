@@ -45,4 +45,10 @@ public class CategoryService {
                 .map(CategoryResponseDto::new)
                 .toList();
     }
+
+    public CategoryResponseDto getCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
+        return new CategoryResponseDto(category);
+    }
 }
