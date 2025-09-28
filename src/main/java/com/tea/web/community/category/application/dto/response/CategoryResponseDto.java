@@ -6,11 +6,11 @@ import lombok.Getter;
 
 @Getter
 public class CategoryResponseDto {
-    private Long CategoryId;
+    private Long categoryId;
     private String categoryName;
 
     public CategoryResponseDto(Category category) {
-        this.CategoryId = category.getId();
+        this.categoryId = category.getId();
         this.categoryName = category.getCategoryName();
     }
 }
