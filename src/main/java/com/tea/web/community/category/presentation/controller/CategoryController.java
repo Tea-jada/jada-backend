@@ -83,6 +83,6 @@ public class CategoryController {
             @PathVariable("categoryId") Long categoryId,
             @AuthenticationPrincipal UserDetails userDetails) {
         categoryService.deleteCategory(categoryId, userDetails);
-        ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CATEGORY_DELETED_SUCCESS));
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CATEGORY_DELETED_SUCCESS));
     }
 }
