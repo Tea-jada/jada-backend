@@ -21,11 +21,16 @@ public enum ResponseStatus {
   POST_SEARCH_SUCCESS(HttpStatus.OK, "게시글 검색에 성공했습니다."),
 
   COMMENT_CREATE_SUCCESS(HttpStatus.CREATED, "댓글 생성에 성공했습니다."),
-  COMMENT_READ_SUCCESS(HttpStatus.OK, "댓글 생성에 성공했습니다."),
+  COMMENT_READ_SUCCESS(HttpStatus.OK, "댓글 조회회에 성공했습니다."),
   COMMENT_UPDATE_SUCCESS(HttpStatus.OK, "댓글 수정에 성공했습니다."),
   COMMENT_DELETE_SUCCESS(HttpStatus.OK, "댓글 삭제에 성공했습니다."),
 
   IMAGE_UPLOAD_SUCCESS(HttpStatus.OK, "이미지 업로드에 성공했습니다."),
+
+  CATEGORY_CREATE_SUCCESS(HttpStatus.OK, "카테고리 생성에 성공했습니다."),
+  CATEGORY_READ_SUCCESS(HttpStatus.OK, "카테고리 조회에 성공했습니다."),
+  CATEGORY_UPDATE_SUCCESS(HttpStatus.OK, "카테고리 수정에 송공헀습니다."),
+
   ;
 
   private final HttpStatus httpStatus;

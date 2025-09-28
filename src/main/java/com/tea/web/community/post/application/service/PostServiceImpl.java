@@ -4,12 +4,12 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.tea.web.common.CustomException;
 import com.tea.web.common.ErrorType;
+import com.tea.web.community.category.domain.model.Category;
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
 import com.tea.web.community.post.application.dto.response.ImageResponseDto;
 import com.tea.web.community.post.application.dto.response.PostListResponseDto;
-import com.tea.web.community.post.domain.model.Category;
 import com.tea.web.community.post.domain.model.Post;
 import com.tea.web.community.post.domain.model.Section;
 import com.tea.web.community.post.domain.model.SubSection;
@@ -52,20 +52,20 @@ public class PostServiceImpl implements PostService {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
 
-        // ARTICLE(기사)와 NOTICE(공지사항)은 ADMIN만 작성가능
-        if (request.getCategory() == Category.ARTICLE ||
-                request.getCategory() == Category.NOTICE) {
-            if (user.getRole() != Role.ADMIN) {
-                throw new CustomException(ErrorType.ADMIN_ONLY_POST);
-            }
-        }
+        // // ARTICLE(기사)와 NOTICE(공지사항)은 ADMIN만 작성가능
+        // if (request.getCategory() == Category.ARTICLE ||
+        //         request.getCategory() == Category.NOTICE) {
+        //     if (user.getRole() != Role.ADMIN) {
+        //         throw new CustomException(ErrorType.ADMIN_ONLY_POST);
+        //     }
+        // }
 
         Post post = Post.builder()
                 .user(user)
                 .type(request.getType())
                 .title(request.getTitle())
                 .content(request.getContent())
-                .category(request.getCategory())
+                // .category(request.getCategory())
                 .thumbnailUrl(request.getThumbnailUrl())
                 .img1l(request.getImg1l())
                 .img2l(request.getImg2l())
@@ -174,7 +174,7 @@ public class PostServiceImpl implements PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .type(post.getType())
-                .category(post.getCategory())
+                // .category(post.getCategory())
                 .thumbnailUrl(post.getThumbnailUrl())
                 .section(post.getSection())
                 .subSection(post.getSubSection())

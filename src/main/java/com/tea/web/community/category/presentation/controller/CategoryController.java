@@ -1,13 +1,17 @@
 package com.tea.web.community.category.presentation.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tea.web.common.ResponseDataDto;
 import com.tea.web.common.ResponseMessageDto;
 import com.tea.web.common.ResponseStatus;
 import com.tea.web.community.category.application.dto.request.CategoryCreateRequestDto;
@@ -40,6 +44,11 @@ public class CategoryController {
     /**
      * 카테고리 조회 (전체 조회)
      */
+    @GetMapping
+    public ResponseEntity<ResponseDataDto<List<CategoryResponseDto>>> getCategories() {
+        List<CategoryResponseDto> responseDto = categoryService.getCategories();
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.CATEGORY_READ_SUCCESS, responseDto));
+    }
 
     /**
      * 카테고리 단일 조회
