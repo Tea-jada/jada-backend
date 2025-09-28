@@ -37,7 +37,7 @@ public class SubCategoryController {
      * @param userDetails 현재 인증된 사용자 정보
      * @return 생성된 게시글 정보
      */
-    @PostMapping("/category/{categoryId}/subcategories")
+    @PostMapping("/categories/{categoryId}/subcategories")
     public ResponseEntity<ResponseMessageDto> createSubCategory(@RequestBody SubCategoryRequestDto request,
             @PathVariable("categoryId") Long categoryId,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -45,8 +45,13 @@ public class SubCategoryController {
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.CATEGORY_CREATE_SUCCESS));
     }
 
-    // 카테고리 별 서브카테고리 조회
-    @GetMapping("/category/{categoryId}/subcategories")
+    /**
+     * 카테고리 별 서브카테고리 조회
+     * 
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/categories/{categoryId}/subcategories")
     public ResponseEntity<ResponseDataDto<List<SubCategoryResponseDto>>> getSubCategoriesByCategory(
             @PathVariable("categoryId") Long categoryId) {
         List<SubCategoryResponseDto> responseDto = subCategoryService.getSubCategoriesByCategory(categoryId);
