@@ -144,7 +144,7 @@ public class PostController {
      * @param pageable
      * @return
      */
-    @GetMapping("/section")
+    @PostMapping("/section")
     public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getPostsBySection(
             // @PathVariable("section") String section,
             @RequestBody ByCategoryRequestDto request,
@@ -160,7 +160,7 @@ public class PostController {
      * @param pageable
      * @return
      */
-    @GetMapping("/sub-section")
+    @PostMapping("/sub-section")
     public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getPostsBySubSection(
             // @PathVariable("section") String section,
             // @PathVariable("subSection") String subSection,
