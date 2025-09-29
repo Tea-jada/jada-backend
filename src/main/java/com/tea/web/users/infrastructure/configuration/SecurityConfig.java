@@ -45,6 +45,8 @@ public class SecurityConfig {
             // category
             "/api/v1/posts/category/**", // 카테고리 별 조회
             "/api/v1/subcategories/**", // 서브카테고리 조회
+            "/api/categories/{categoryId}/subcategories", // 카테고리별 서브카테고리 조회
+            "/api/v1/categories/**", // 카테고리 조회
 
             // comments
             "/api/v1/posts/*/comments" // 댓글 조회
