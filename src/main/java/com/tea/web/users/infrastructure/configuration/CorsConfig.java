@@ -16,13 +16,12 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        
+
         // ✅ 여기에 로컬 + 배포 프론트 주소를 모두 추가
         config.setAllowedOrigins(List.of(
-            "http://localhost:3000",
-            "https://jeda-frontend.onrender.com"
-        ));
-        
+                "http://localhost:3000",
+                "https://jeda-frontend.onrender.com"));
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("*"));

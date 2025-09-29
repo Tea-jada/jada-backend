@@ -37,13 +37,16 @@ public class SecurityConfig {
             "/api/v1/users/login",
 
             // posts
-            "/api/v1/posts/section/**", // 섹션, 서브섹션 별 조회
+            "/api/v1/posts/section",
+            "/api/v1/posts/sub-section", // 섹션, 서브섹션 별 조회
             "/api/v1/posts/search", // 검색
             "/api/v1/posts/*", // 상세 조회
 
             // category
             "/api/v1/posts/category/**", // 카테고리 별 조회
             "/api/v1/subcategories/**", // 서브카테고리 조회
+            "/api/categories/{categoryId}/subcategories", // 카테고리별 서브카테고리 조회
+            "/api/v1/categories/**", // 카테고리 조회
 
             // comments
             "/api/v1/posts/*/comments" // 댓글 조회
