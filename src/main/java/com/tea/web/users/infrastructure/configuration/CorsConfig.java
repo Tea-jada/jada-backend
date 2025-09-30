@@ -20,7 +20,9 @@ public class CorsConfig {
         // ✅ 여기에 로컬 + 배포 프론트 주소를 모두 추가
         config.setAllowedOrigins(List.of(
                 "http://localhost:3000",
-                "https://jeda-frontend.onrender.com"));
+                "http://3.35.4.187",
+                "http://ec2-43-200-169-233.ap-northeast-2.compute.amazonaws.com",
+                "http://jeda130.com"));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
