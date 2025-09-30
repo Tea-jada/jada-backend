@@ -22,6 +22,7 @@ public class CorsConfig {
                 "http://localhost:3000",
                 "http://3.35.4.187",
                 "http://ec2-43-200-169-233.ap-northeast-2.compute.amazonaws.com",
+                "http://jeda130.com",
                 "http://www.jeda130.com"));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
