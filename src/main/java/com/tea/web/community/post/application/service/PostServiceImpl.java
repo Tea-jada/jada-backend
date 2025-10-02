@@ -134,7 +134,7 @@ public class PostServiceImpl implements PostService {
 
         @Override
         public Page<PostListResponseDto> searchPosts(String keyword, Pageable pageable) {
-                return postRepository.searchByTitleOrUsernameAndIsDeletedFalse(keyword, pageable)
+                return postRepository.searchByTitleOrUsername(keyword, pageable)
                                 .map(this::convertToListResponseDto);
         }
 
@@ -157,7 +157,7 @@ public class PostServiceImpl implements PostService {
                 Category category = categoryRepository.findByCategoryName(section)
                                 .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
 
-                return postRepository.findByCategoryOrderByUpdatedAtDescAndIsDeletedFalse(category, pageable)
+                return postRepository.findActivePostsByCategory(category, pageable)
                                 .map(this::convertToListResponseDto);
                 // Section sec;
                 // try {
@@ -178,7 +178,7 @@ public class PostServiceImpl implements PostService {
                                 .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
 
                 return postRepository
-                                .findByCategoryAndSubCategoryOrderByUpdatedAtDescAndIsDeletedFalse(category,
+                                .findActivePostsByCategoryAndSubCategory(category,
                                                 subCategory, pageable)
                                 .map(this::convertToListResponseDto);
                 // Section sec;
