@@ -87,14 +87,14 @@ public class PostServiceImpl implements PostService {
 
         @Override
         public PostResponseDto getPost(Long postId) {
-                Post post = postRepository.findById(postId)
+                Post post = postRepository.findByIdAndIsDeletedFalse(postId)
                                 .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
                 return convertToResponseDto(post);
         }
 
         @Override
         public Page<PostListResponseDto> getAllPosts(Pageable pageable) {
-                return postRepository.findAll(pageable)
+                return postRepository.findAllByIsDeletedFalse(pageable)
                                 .map(this::convertToListResponseDto);
         }
 
@@ -134,7 +134,7 @@ public class PostServiceImpl implements PostService {
 
         @Override
         public Page<PostListResponseDto> searchPosts(String keyword, Pageable pageable) {
-                return postRepository.searchByTitleOrUsername(keyword, pageable)
+                return postRepository.searchByTitleOrUsernameAndIsDeletedFalse(keyword, pageable)
                                 .map(this::convertToListResponseDto);
         }
 
@@ -157,7 +157,7 @@ public class PostServiceImpl implements PostService {
                 Category category = categoryRepository.findByCategoryName(section)
                                 .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
 
-                return postRepository.findByCategoryOrderByUpdatedAtDesc(category, pageable)
+                return postRepository.findByCategoryOrderByUpdatedAtDescAndIsDeletedFalse(category, pageable)
                                 .map(this::convertToListResponseDto);
                 // Section sec;
                 // try {
@@ -177,7 +177,9 @@ public class PostServiceImpl implements PostService {
                 SubCategory subCategory = subCategoryRepository.findBySubCategoryName(subSection)
                                 .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
 
-                return postRepository.findByCategoryAndSubCategoryOrderByUpdatedAtDesc(category, subCategory, pageable)
+                return postRepository
+                                .findByCategoryAndSubCategoryOrderByUpdatedAtDescAndIsDeletedFalse(category,
+                                                subCategory, pageable)
                                 .map(this::convertToListResponseDto);
                 // Section sec;
                 // SubSection sub;

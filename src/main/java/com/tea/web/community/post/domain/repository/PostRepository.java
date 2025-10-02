@@ -3,6 +3,9 @@ package com.tea.web.community.post.domain.repository;
 import com.tea.web.community.category.domain.model.Category;
 import com.tea.web.community.category.domain.model.SubCategory;
 import com.tea.web.community.post.domain.model.Post;
+import com.tea.web.users.domain.model.User;
+
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +28,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByCategoryAndSubCategoryOrderByUpdatedAtDesc(Category category, SubCategory subCategory,
             Pageable pageable);
+
+    Optional<Post> findByIdAndIsDeletedFalse(Long postId);
+
+    Page<Post> findAllByIsDeletedFalse(Pageable pageable);
+
+    Page<Post> searchByTitleOrUsernameAndIsDeletedFalse(String keyword, Pageable pageable);
+
+    Page<Post> findByCategoryOrderByUpdatedAtDescAndIsDeletedFalse(Category category, Pageable pageable);
+
+    Page<Post> findByCategoryAndSubCategoryOrderByUpdatedAtDescAndIsDeletedFalse(Category category,
+            SubCategory subCategory, Pageable pageable);
 }
