@@ -61,9 +61,9 @@ public class PostServiceImpl implements PostService {
                 // throw new CustomException(ErrorType.ADMIN_ONLY_POST);
                 // }
                 // }
-                Category category = categoryRepository.findByCategoryName(request.getCategory())
+                Category category = categoryRepository.findById(request.getCategoryId())
                                 .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
-                SubCategory subCategory = subCategoryRepository.findBySubCategoryName(request.getSubCategory())
+                SubCategory subCategory = subCategoryRepository.findById(request.getSubCategoryId())
                                 .orElseThrow(() -> new CustomException(ErrorType.CATEGORY_NOT_FOUND));
 
                 Post post = Post.builder()
