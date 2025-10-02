@@ -15,8 +15,8 @@ public class PostCreateRequestDto {
     private String content;
     // private Category category;
     private String thumbnailUrl;
-    private String category;
-    private String subCategory;
+    private Long categoryId;
+    private Long subCategoryId;
     // private String img1l;
     // private String img2l;
     // private String img3l;
