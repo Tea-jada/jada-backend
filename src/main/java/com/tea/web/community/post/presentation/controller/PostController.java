@@ -54,20 +54,18 @@ public class PostController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDto));
     }
 
-    // /**
-    // * 게시글 목록 조회 (페이징)
-    // *
-    // * @param pageable 페이징 정보 (page: 페이지 번호(0부터 시작), size: 페이지 크기)
-    // * @return 페이징된 게시글 목록 (id, title, content, thumbnailUrl, updatedAt)
-    // * @example /api/v1/posts?page=0&size=10
-    // */
-    // @GetMapping
-    // public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>>
-    // getAllPosts(Pageable pageable) {
-    // Page<PostListResponseDto> responseDtos = postService.getAllPosts(pageable);
-    // return ResponseEntity.ok(new
-    // ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
-    // }
+    /**
+     * 게시글 목록 조회 (페이징)
+     *
+     * @param pageable 페이징 정보 (page: 페이지 번호(0부터 시작), size: 페이지 크기)
+     * @return 페이징된 게시글 목록 (id, title, content, thumbnailUrl, updatedAt)
+     * @example /api/v1/posts?page=0&size=10
+     */
+    @GetMapping
+    public ResponseEntity<ResponseDataDto<Page<PostListResponseDto>>> getAllPosts(Pageable pageable) {
+        Page<PostListResponseDto> responseDtos = postService.getAllPosts(pageable);
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.POST_READ_SUCCESS, responseDtos));
+    }
 
     /**
      * 게시글 수정
@@ -182,4 +180,12 @@ public class PostController {
         ImageResponseDto response = postService.uploadImage(file);
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.IMAGE_UPLOAD_SUCCESS, response));
     }
+
+    // 메인 게시글 지정
+
+    // 게시글 좋아요
+
+    // 게시글 조회수(일별, 월별, 년별)
+
+    // 인기 게시글 조회
 }
