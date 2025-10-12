@@ -94,7 +94,8 @@ public class PostServiceImpl implements PostService {
 
         @Override
         public Page<PostListResponseDto> getAllPosts(Pageable pageable) {
-                return postRepository.findAllByIsDeletedFalse(pageable)
+                // 최신순 정렬, 삭제되지 않은 게시글만 조회
+                return postRepository.findAllByIsDeletedFalseOrderByUpdatedAtDesc(pageable)
                                 .map(this::convertToListResponseDto);
         }
 
