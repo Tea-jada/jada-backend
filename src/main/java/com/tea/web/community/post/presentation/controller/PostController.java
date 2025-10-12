@@ -6,6 +6,7 @@ import com.tea.web.common.ResponseStatus;
 import com.tea.web.community.post.application.dto.request.ByCategoryRequestDto;
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
+import com.tea.web.community.post.application.dto.response.FeaturedPostResponseDto;
 import com.tea.web.community.post.application.dto.response.ImageResponseDto;
 import com.tea.web.community.post.application.dto.response.PostListResponseDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
@@ -182,6 +183,13 @@ public class PostController {
     }
 
     // 메인 게시글 지정
+    @PostMapping("/featured/{postId}")
+    public ResponseEntity<ResponseMessageDto> setFeaturedPost(
+            @PathVariable("postId") Long postId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        postService.setFeaturedPost(postId, userDetails);
+        return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEATURED_POST_SET_SUCCESS));
+    }
 
     // 게시글 좋아요
 

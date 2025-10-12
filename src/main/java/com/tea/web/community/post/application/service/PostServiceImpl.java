@@ -11,10 +11,14 @@ import com.tea.web.community.category.domain.repository.SubCategoryRepository;
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
+import com.tea.web.community.post.application.dto.response.FeaturedPostResponseDto;
 import com.tea.web.community.post.application.dto.response.ImageResponseDto;
 import com.tea.web.community.post.application.dto.response.PostListResponseDto;
+import com.tea.web.community.post.domain.model.FeaturedPost;
 import com.tea.web.community.post.domain.model.Post;
+import com.tea.web.community.post.domain.repository.FeaturedPostRepository;
 import com.tea.web.community.post.domain.repository.PostRepository;
+import com.tea.web.users.domain.model.Role;
 import com.tea.web.users.domain.model.User;
 import com.tea.web.users.domain.repository.UserRepository;
 
@@ -40,6 +44,7 @@ public class PostServiceImpl implements PostService {
         private final Cloudinary cloudinary;
         private final CategoryRepository categoryRepository;
         private final SubCategoryRepository subCategoryRepository;
+        private final FeaturedPostRepository featuredPostRepository;
 
         /**
          * 게시글 생성
@@ -199,6 +204,32 @@ public class PostServiceImpl implements PostService {
                 // return postRepository.findBySectionAndSubSectionOrderByUpdatedAtDesc(sec,
                 // sub, pageable)
                 // .map(this::convertToListResponseDto);
+        }
+
+        @Override
+        @Transactional
+        public void setFeaturedPost(Long postId, UserDetails userDetails) {
+                User user = userRepository.findByEmail(userDetails.getUsername())
+                                .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+
+                if (user.getRole() != Role.ADMIN) {
+                        throw new CustomException(ErrorType.FORBIDDEN);
+                }
+
+                // 1. 기존 대표 게시글이 존재하면 soft delete 처리
+                featuredPostRepository.findTopByIsDeletedFalseOrderByCreatedAtDesc()
+                                .ifPresent(old -> {
+                                        old.softDeletedBy(user.getEmail());
+                                        featuredPostRepository.save(old);
+                                });
+
+                // 2. 새로운 대표 게시글 등록
+                Post post = postRepository.findById(postId)
+                                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
+
+                FeaturedPost featuredPost = new FeaturedPost(post);
+
+                featuredPostRepository.save(featuredPost);
         }
 
         private PostResponseDto convertToResponseDto(Post post) {
