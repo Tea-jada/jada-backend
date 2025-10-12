@@ -216,11 +216,12 @@ public class PostServiceImpl implements PostService {
                         throw new CustomException(ErrorType.FORBIDDEN);
                 }
 
-                // 1. 기존 대표 게시글이 존재하면 soft delete 처리
+                // 1. 기존 대표 게시글이 존재하면 soft delete 처리 -> 완전 삭제로 수정정
                 featuredPostRepository.findTopByIsDeletedFalseOrderByCreatedAtDesc()
                                 .ifPresent(old -> {
-                                        old.softDeletedBy(user.getEmail());
-                                        featuredPostRepository.save(old);
+                                        // old.softDeletedBy(user.getEmail());
+                                        // featuredPostRepository.save(old);
+                                        featuredPostRepository.delete(old);
                                 });
 
                 // 2. 새로운 대표 게시글 등록
