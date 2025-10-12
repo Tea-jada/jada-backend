@@ -2,6 +2,7 @@ package com.tea.web.community.post.application.service;
 
 import com.tea.web.community.post.application.dto.request.PostCreateRequestDto;
 import com.tea.web.community.post.application.dto.request.PostUpdateRequestDto;
+import com.tea.web.community.post.application.dto.response.FeaturedPostResponseDto;
 import com.tea.web.community.post.application.dto.response.ImageResponseDto;
 import com.tea.web.community.post.application.dto.response.PostListResponseDto;
 import com.tea.web.community.post.application.dto.response.PostResponseDto;
@@ -32,4 +33,8 @@ public interface PostService {
     Page<PostListResponseDto> getPostsBySubSection(String section, String subSection, Pageable pageable);
 
     ImageResponseDto uploadImage(MultipartFile file);
+
+    void setFeaturedPost(Long postId, UserDetails userDetails);
+
+    FeaturedPostResponseDto getFeaturedPost();
 }
