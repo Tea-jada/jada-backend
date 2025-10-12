@@ -33,6 +33,7 @@ public enum ResponseStatus {
   CATEGORY_UPDATE_SUCCESS(HttpStatus.OK, "카테고리 수정에 송공헀습니다."),
   CATEGORY_DELETED_SUCCESS(HttpStatus.OK, "카테고리 삭제에 성공했습니다."),
   FEATURED_POST_SET_SUCCESS(HttpStatus.OK, "메인 게시글 지정에 성공했습니다."),
+  FEATURED_POST_GET_SUCCESS(HttpStatus.OK, "메인 게시글 조회에 성공했습니다."),
 
   ;
 

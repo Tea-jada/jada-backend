@@ -182,13 +182,30 @@ public class PostController {
         return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.IMAGE_UPLOAD_SUCCESS, response));
     }
 
-    // 메인 게시글 지정
+    /**
+     * 메인 게시글 지정
+     * 
+     * @param postId
+     * @param userDetails
+     * @return
+     */
     @PostMapping("/featured/{postId}")
     public ResponseEntity<ResponseMessageDto> setFeaturedPost(
             @PathVariable("postId") Long postId,
             @AuthenticationPrincipal UserDetails userDetails) {
         postService.setFeaturedPost(postId, userDetails);
         return ResponseEntity.ok(new ResponseMessageDto(ResponseStatus.FEATURED_POST_SET_SUCCESS));
+    }
+
+    /**
+     * 메인 게시글 조회
+     * 
+     * @return
+     */
+    @GetMapping("/featured/show")
+    public ResponseEntity<ResponseDataDto<FeaturedPostResponseDto>> getFeaturedPost() {
+        FeaturedPostResponseDto response = postService.getFeaturedPost();
+        return ResponseEntity.ok(new ResponseDataDto<>(ResponseStatus.FEATURED_POST_GET_SUCCESS, response));
     }
 
     // 게시글 좋아요

@@ -35,4 +35,6 @@ public interface PostService {
     ImageResponseDto uploadImage(MultipartFile file);
 
     void setFeaturedPost(Long postId, UserDetails userDetails);
+
+    FeaturedPostResponseDto getFeaturedPost();
 }

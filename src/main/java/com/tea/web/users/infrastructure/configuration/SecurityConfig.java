@@ -42,6 +42,7 @@ public class SecurityConfig {
             "/api/v1/posts/search", // 검색
             "/api/v1/posts/*", // 상세 조회
             "/api/v1/posts", // 전체 조회
+            "/api/v1/posts/featured/show", // 메인 게시글 조회
 
             // category
             "/api/v1/posts/category/**", // 카테고리 별 조회

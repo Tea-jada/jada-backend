@@ -232,6 +232,28 @@ public class PostServiceImpl implements PostService {
                 featuredPostRepository.save(featuredPost);
         }
 
+        @Override
+        public FeaturedPostResponseDto getFeaturedPost() {
+                FeaturedPost featuredPost = featuredPostRepository
+                                .findTopByIsDeletedFalseOrderByCreatedAtDesc()
+                                .orElseThrow(() -> new CustomException(ErrorType.POST_NOT_FOUND));
+
+                return FeaturedPostResponseDto.builder()
+                                .id(featuredPost.getId())
+                                .id(featuredPost.getPost().getId())
+                                .title(featuredPost.getPost().getTitle())
+                                .content(featuredPost.getPost().getContent())
+                                .type(featuredPost.getPost().getType())
+                                .thumbnailUrl(featuredPost.getPost().getThumbnailUrl())
+                                .category(featuredPost.getPost().getCategory().getCategoryName())
+                                .subCategory(featuredPost.getPost().getSubCategory().getSubCategoryName())
+                                .email(featuredPost.getPost().getUser().getEmail())
+                                .username(featuredPost.getPost().getUser().getUsername())
+                                .createdAt(featuredPost.getPost().getCreatedAt())
+                                .updatedAt(featuredPost.getPost().getUpdatedAt())
+                                .build();
+        }
+
         private PostResponseDto convertToResponseDto(Post post) {
                 return PostResponseDto.builder()
                                 .id(post.getId())
