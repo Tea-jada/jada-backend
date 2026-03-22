@@ -14,6 +14,8 @@ public enum ResponseStatus {
   LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공했습니다."),
   UPDATE_USER_SUCCESS(HttpStatus.OK, "유저 정보 수정에 성공했습니다."),
   DELETE_USER_SUCCESS(HttpStatus.OK, "회원 탈퇴에 성공했습니다."),
+  GET_PASSWORD_SUCCESS(HttpStatus.OK, "비밀번호 조회에 성공했습니다."),
+  CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "비밀번호 변경에 성공했습니다."),
 
   POST_CREATE_SUCCESS(HttpStatus.CREATED, "게시글 생성에 성공했습니다."),
   POST_READ_SUCCESS(HttpStatus.OK, "게시글 조회에 성공했습니다."),

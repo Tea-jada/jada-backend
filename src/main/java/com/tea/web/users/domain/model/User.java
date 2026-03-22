@@ -69,4 +69,8 @@ public class User extends BaseEntity {
             this.password = passwordEncoder.encode(requestDto.getPassword());
         }
     }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

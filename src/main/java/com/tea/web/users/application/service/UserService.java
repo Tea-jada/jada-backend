@@ -3,8 +3,10 @@ package com.tea.web.users.application.service;
 import com.tea.web.common.CustomException;
 import com.tea.web.common.ErrorType;
 import com.tea.web.users.application.dto.request.AdminSignupRequestDto;
+import com.tea.web.users.application.dto.request.ChangePasswordDto;
 import com.tea.web.users.application.dto.request.SignupRequestDto;
 import com.tea.web.users.application.dto.request.UpdateUserInfoRequestDto;
+import com.tea.web.users.application.dto.response.PasswordResponseDto;
 import com.tea.web.users.application.dto.response.UserInfoResponseDto;
 import com.tea.web.users.domain.model.Role;
 import com.tea.web.users.domain.model.User;
@@ -137,6 +139,35 @@ public class UserService {
         checkUserAuthority(user, userDetails);
 
         user.softDeletedBy(userDetails.getUsername());
+        userRepository.save(user);
+    }
+
+    /**
+     * 패스워드 조회회 ( 비밀번호는 해시로 암호화돼서 못가져옴 )
+     */
+    // @Transactional
+    // public PasswordResponseDto getPasswd(PasswordDto requestDto) {
+    // String username = requestDto.getUsername();
+    // User user = userRepository.findByUsername(username)
+    // .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+
+    // return new PasswordResponseDto(user);
+    // }
+
+    /**
+     * 비밀번호 변경경
+     * 
+     * @param userId
+     * @param userDetails
+     */
+    @Transactional
+    public void changePasswd(ChangePasswordDto requestDto) {
+        User user = userRepository.findByEmail(requestDto.getEmail())
+                .orElseThrow(() -> new CustomException(ErrorType.USER_NOT_FOUND));
+
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        user.changePassword(encodedPassword);
+
         userRepository.save(user);
     }
 

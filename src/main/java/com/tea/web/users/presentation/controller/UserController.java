@@ -4,8 +4,10 @@ import com.tea.web.common.ResponseDataDto;
 import com.tea.web.common.ResponseMessageDto;
 import com.tea.web.common.ResponseStatus;
 import com.tea.web.users.application.dto.request.AdminSignupRequestDto;
+import com.tea.web.users.application.dto.request.ChangePasswordDto;
 import com.tea.web.users.application.dto.request.SignupRequestDto;
 import com.tea.web.users.application.dto.request.UpdateUserInfoRequestDto;
+import com.tea.web.users.application.dto.response.PasswordResponseDto;
 import com.tea.web.users.application.dto.response.UserInfoResponseDto;
 import com.tea.web.users.application.service.UserService;
 import jakarta.validation.Valid;
@@ -101,5 +103,22 @@ public class UserController {
             @AuthenticationPrincipal UserDetails userDetails) {
         userService.deleteUser(userId, userDetails);
         return new ResponseMessageDto(ResponseStatus.DELETE_USER_SUCCESS);
+    }
+
+    /**
+     * 비밀번호 가져오기
+     */
+    // @PostMapping("/info/passwd")
+    // public ResponseDataDto<PasswordResponseDto> getMyInfo(
+    // @RequestBody PasswordDto requestDto) {
+    // PasswordResponseDto passwd = userService.getPasswd(requestDto);
+    // return new ResponseDataDto<>(ResponseStatus.GET_PASSWORD_SUCCESS, passwd);
+    // }
+
+    @PostMapping("/change/passwd")
+    public ResponseMessageDto changePassword(
+            @RequestBody ChangePasswordDto requestDto) {
+        userService.changePasswd(requestDto);
+        return new ResponseMessageDto(ResponseStatus.CHANGE_PASSWORD_SUCCESS);
     }
 }

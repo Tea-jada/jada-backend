@@ -35,6 +35,7 @@ public class SecurityConfig {
             "/api/v1/users/signup/admin",
             "/api/v1/users/signup",
             "/api/v1/users/login",
+            "/api/v1/users/change/passwd",
 
             // posts
             "/api/v1/posts/section",
